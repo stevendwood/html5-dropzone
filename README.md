@@ -87,7 +87,23 @@ function dragEndHandler(event) {
 
 ```
 
-However, supposing we decided that the source element could be copied or moved, things start to go wrong :
+Also - supposing we did this :
+
+```javascript
+// implemented on the draggable source
+function dragStartHandler(event) {
+   event.dataTransfer.effectAllowed = "copyMove"
+}
+
+// implemented on the drop target
+function dragOverHandler(event) {
+   event.dataTransfer.dropEffect = "link";
+   ...
+}
+```
+Them the drop would not be allowed, as the selected dropEffect was not one of the effectAllowed values. IE would normally allow the drop, however by using this library we bring it inline with the other browsers.
+
+Also, supposing we decided that we tried this
 
 ```javascript
 // implemented on the draggable source
@@ -108,7 +124,9 @@ function dragEndHandler(event) {
 
 ```
 
-Interestingly the dropEffect it seems does come through when you drag into a native application.  However, to fix this I introduced a new method you can call called getDropEffect() :
+Interestingly the dropEffect it seems does come through when you drag into a native application.  
+
+However, to fix this I introduced a new method you can call called getDropEffect() :
 
 ```javascript
 function dragEndHandler(event) {
@@ -126,14 +144,44 @@ On Safari on a mac - effectAllowed cannot be set programatically, therefore any 
 
 Should the "operation" part of the dropzone be used to set the drop effect ?  My conclusion was probably yes, provided that keyboard shortcuts can change it - i.e. if you do nothing you get the operation, otherwise you get the operation as specified by the keyboard.
 
-If you want to do something to the source element based on dropEffect - then you must allow only one effectAllowed copy, move or link if you do not set it it will become "copy".  The best way to do this is to use the ondrop event and check whether any modifier keys were pressed and take any action then.  Otherwise if you don't need to supprt IE, you can happily listen for dragends at the source and reliably get the dropEffect.
+###<code>event.getDropEffect()</code>
+If you want to use the browsers native dropEffect property reliably to do something to the source element based on dropEffect - then you must allow only one effectAllowed copy, move or link if you do not set it it will become "copy".  Otherwise you should use the getDropEvent function in the dragend handler which reliably works in IE for compund values of the effectAllowed property.
 
-I thought it might useful to add a class based on the dropEffect -  drag-matches.copy  drag-matches.move or drag-matches.link. 
+```html
 
-If you need to do something based on dropeffect at dragend - there are limitations, to get it to work on IE you must have only one effectAllowed set on the dragstart handler.  Suppose you wanted to decorate or remove the source element based on the dropEffect - you would need to check the keyboard modifiers and figure it out that way - or you could see whether the element has the .copy, .move or .link class added. 
+<ol dropzone="move string:text/x-example" ondragstart="dragStartHandler(event)" ondragend="dragEndHandler(event)">
 
-So - I fixed up setting dropEffect so that it prevents the drop on IE if the effectAllowed is set, bringing it inline with the other browsers.  It can also be used to influence the cursor on Chrome and Safari, and in reporting the dropEffect at the source on dragEnd on Chrome, Safari and Firefox.  On IE it will not affect the cursor or what gets reported at the source unless the effectAllowed is "copy", "move" or "link" and the dropEffect matches it exactly.
+<script>
+   /*
+       On drag start we allow the element to be moved or copied, on drag end we want to
+       remove the element if the selected dropEffect was "move". Because we used a 
+       'compound' effectAllowed (copyMove), Internet Explorer unforunately reports that
+       the dropEffect was "none" on the dragend no matter what we set it to on dragover.
+       The effect will be set on the dropzone based on the keyboard modifiers, if none
+       were used, we get the default for the dropzone which was "move" in the markup above.
+    */
+   function dragStartHandler(event) {
+      if (event.target instanceof HTMLLIElement) {
 
+       event.dataTransfer.setData("text/x-my-type", event.target.dataset.value);
+     event.dataTransfer.effectAllowed = 'copyMove'; // only allow moves
+    } 
+    }
+
+  function dragEndHandler(event) {
+        // use this instead of event.datatTransfer.dropEffect
+    var dropEffect = event.dataTransfer.getDropEffect();
+
+    if (dropEffect === "move") {
+         event.target.parentElement.removeChild(event.target);
+      }
+
+    }
+</script>
+
+```
+
+You also get a class added ondragover reflecting the dropEffect -  drag-matches.copy  drag-matches.move or drag-matches.link. 
 
 
 ## Using ``dropzone``
