@@ -21,7 +21,7 @@ A JavaScript library that provides a usable implementation of the HTML5 [dropzon
 Supports: IE10+, Chrome, Firefox, Safari
 
 ###Usage
-Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a vlid drop effect is selected.
+Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a valid drop effect is selected.
 
 ```html
 <div id="paper" draggable="true" ondragstart="startDragPaper(event)"></div>
@@ -52,15 +52,15 @@ Allows you to store any data you like in the data transfer object, getting round
 </script>
 ```
 
-For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of this code which will not run on IE anyway...:
+For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of this code which will not run on IE, and will not handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target... :
 
 ```html
 <!-- (FOR ILLUSTRATION ONLY - DOES NOT WORK !!) -->
 <div id="paper" draggable="true" ondragstart="startDragPaper(event)"></div>
 <div id="apple" draggable="true" ondragstart="startDragApple(event)"></div>
     
-<div  ondragover="isPaper(event)" ondragenter="isPaper(event)" ondrop="handleDropPaper(event)"></div>
-<div  ondragover="isApple(event)" ondragenter="isApple(event)" ondrop="handleDropApple(event)"></div>
+<div  ondragover="isPaper(event)" ondragenter="isPaper(event)" ondragleave="removeClass(event)" ondrop="handleDropPaper(event)"></div>
+<div  ondragover="isApple(event)" ondragenter="isApple(event)" ondragleave="removeClass(event)" ondrop="handleDropApple(event)"></div>
 
 <script>
 
@@ -76,14 +76,20 @@ For anyone familiar with the HTML5 drag and drop API, this code is roughly the e
 
       function isPaper(event) {
         if (event.dataTransfer.types.indexOf("x-apple") !== -1) {
+          event.target.classList.add("drag-matches");
           event.stopPropagation();
         }
       }
        
       function isApple(event) {
         if (event.dataTransfer.types.indexOf("x-paper") !== -1) {
+          event.target.classList.add("drag-matches");
           event.stopPropagation();
         }
+      }
+
+      function removeClass(event) {
+        event.target.classList.remove("drag-matches");
       }
 
       function handleDropPaper(e) {
