@@ -213,7 +213,7 @@
             setTimeout(function() {
               // give a chance for the _dropEffect to be used
               validDrop = false;
-            });
+            }, 100);
         }.bind(this);
 
         
