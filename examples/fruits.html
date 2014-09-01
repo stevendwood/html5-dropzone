@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drag Test</title>
+		<style>
+		body {
+			font-family: Arial;
+			font-size: 9pt;
+		}
+
+		li {
+			cursor: move;
+		}
+
+		[dropzone] {
+			min-height: 20px;
+			width: 500px;
+			border: 1px solid #ADADAD;
+		}
+
+		[dropzone].drag-matches {
+			border: 1px solid green;
+			background-color: #CCFFCC;
+		}
+		</style>
+	</head>
+	<body>
+		<p>
+			This sample is taken from the <a href="http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html#introduction-7">spec</a>.  Drag fruits from the list and drop them into the other list.  The difference between this code and the sample is that you can drag both ways and that you can copy or move things from one list to another.
+			<ol>
+				<li>Uses the dropzone attribute <code>dropzone="move string:text/x-example"</code></li>
+				<li>You can use a custom type (text/x-example) in <code>DataTransfer.setData()</code> and <code>DataTransfer.getData()</code>which on IE which would usually throw an error.</li>
+				<li>The dropEffect is reported correctly at the source on dragend on IE even though the effectAllowed is <code>copyMove</code> by using the custom DataTransfer.getDropEffect() function.</li>
+				<li>The <code>.drag-matches</code> CSS class is added to the dropzone only when you enter or leave the parent making styling easy rather than having to work around this annoying <a href="http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element">issue</a>.
+			</ol>
+		</p>
+		<div class="sample">
+			<p>What fruits do you like?</p>
+			<ol dropzone="move string:text/x-example" ondrop="dropHandler(event)" ondragstart="dragStartHandler(event)" ondragend="dragEndHandler(event)">
+			 <li draggable="true" data-value="fruit-apple">Apples</li>
+			 <li draggable="true" data-value="fruit-orange">Oranges</li>
+			 <li draggable="true" data-value="fruit-pear">Pears</li>
+			</ol>
+
+			<p>Drop your favorite fruits below, use ctrl on windows to control copy or move:</p>
+			<ol dropzone="move string:text/x-example" ondrop="dropHandler(event)" ondragend="dragEndHandler(event)" ondragstart="dragStartHandler(event)">
+			</ol>
+		</div>
+		<script src="../dist/dropzone.min.js"></script>
+		<script>
+
+		  	var internalDNDType = 'text/x-example'; // set this to something specific to your site
+		  	function dragStartHandler(event) {
+		    	if (event.target instanceof HTMLLIElement) {
+			      	// use the element's data-value="" attribute as the value to be moving:
+			      	event.dataTransfer.setData(internalDNDType, event.target.dataset.value);
+			      	event.dataTransfer.effectAllowed = 'copyMove'; // only allow moves
+		    	} else {
+		      		event.preventDefault(); // don't allow selection to be dragged
+		    	}
+		  	}
+
+			function dragEndHandler(event) {
+			  	var dropEffect = event.dataTransfer.getDropEffect();
+
+			  	console.debug("event.dataTansfer.dropEffect is ",  event.dataTransfer.dropEffect);
+			  	console.debug("event.dataTransfer.getDropEffect() is", dropEffect);
+
+			  	if (dropEffect === "move") {
+			  		event.target.parentElement.removeChild(event.target);
+			  	}
+
+			}
+
+			function dropHandler(event) {
+	    		var li = document.createElement('li');
+	    		var data = event.dataTransfer.getData(internalDNDType);
+	    		if (data == 'fruit-apple') {
+	      			li.textContent = 'Apples';
+	    		} else if (data == 'fruit-orange') {
+	      			li.textContent = 'Oranges';
+	    		} else if (data == 'fruit-pear') {
+	      			li.textContent = 'Pears';
+	    		} else {
+	      			li.textContent = 'Unknown Fruit';
+	    		}
+
+	    		li.setAttribute("draggable", true);
+	    		li.dataset.value = data;
+
+	    		var target = event.target;
+
+	    		if (target instanceof HTMLLIElement) {
+	    			target.parentElement.insertBefore(li, target.nextSibling);
+	    		} else {
+	    			target.appendChild(li);
+	    		}
+	    		event.preventDefault();
+	    	}
+		</script>
+	</body>
+</html>

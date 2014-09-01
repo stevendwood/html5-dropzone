@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drag Test</title>
+		<style>
+			
+
+			#trashcan {
+				width: 128px;
+				height: 128px;
+				background-image: url(images/empty_trash.png);
+				position: absolute;
+				top: 200px;
+			}
+
+			#trashcan.drag-matches {
+				background-image: url(images/full_trash.png);
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<div id="trashcan" dropzone="copy text/plain"></div>
+		<p id="report">Drop text from another application onto the trash can to have it appear here.</p>
+
+		<script src="../dist/dropzone.min.js"></script>
+		<script>
+			dropzone(document.querySelector("#trashcan"))
+				.on("drop", handleDrop);
+
+		    function handleDrop(e) {
+		    	var report = document.querySelector("#report");
+				report.innerHTML = e.dataTransfer.getData("Text");
+		    }
+		</script>
+	</body>
+</html>

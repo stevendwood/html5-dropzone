@@ -1,0 +1,28 @@
+{
+  "name": "html5-dropzone",
+  "version": "0.0.1",
+  "description": "Dropzone implementation",
+  "main": "gulpfile.js",
+  "directories": {
+    "example": "examples",
+    "test": "tests"
+  },
+  "dependencies": {
+    "browserify": "^5.11.0",
+    "gulp": "^3.8.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Steven Wood",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevendwood/html5-dropzone.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stevendwood/html5-dropzone/issues"
+  },
+  "homepage": "https://github.com/stevendwood/html5-dropzone"
+}

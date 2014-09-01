@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drop Effect</title>
+		<style>
+		 	body {
+		 		font-family: Arial;
+		 		font-size: 9pt;
+		 	}
+
+			[draggable='true'] {
+			    width: 200px;
+			    height: 100px;
+			    background-color: lightBlue;
+			}
+
+			.dropzone {
+				width: 200px;
+				height: 100px;
+				margin-top: 100px;
+				border: 1px solid #ADADAD;
+				display: inline-block;
+				vertical-align: top;
+				margin-right: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<p> Effect Allowed : (set on drag start) 
+			<select id="effectAllowed">
+				<option value="none">none</option>
+				<option selected value="copy">copy</option>
+				<option value="copyLink">copyLink</option>
+				<option value="copyMove">copyMove</option>
+				<option value="link">link</option>
+				<option value="link">linkMove</option>
+				<option value="move">move</option>
+				<option value="all">all</option>
+				<option value="uninitiallized">uninitiallized</option>
+			</select>
+		</p>
+		
+		<p> On <a href="www.micrsoft.com">Windows</a> pressing "ctrl" while dragging any drop target switches the dropEffect to be "copy" and pressing "Alt" switches it to "link".  This overrides the defaults that the boxes select when you drag over them. </p>
+
+		<div draggable="true">Drag Me!</div>
+		<div id="dropZoneCopy" dropzone="copy" class="dropzone">I set dropEffect to copy on dragover</div>
+		<div id="dropZoneMove" dropzone="move" class="dropzone">I set dropEffect to move on dragover</div>
+		<div id="dropZoneLink" dropzone="link" class="dropzone">I set dropEffect to link on dragover</div>
+		<div id="dropZoneNone" dropzone = "" class="dropzone">I don't set dropEffect on dragover</div>
+		<script src="../dist/dropzone.min.js"></script>
+		<script>
+
+			    var dragSource = document.querySelector("[draggable='true']");
+				dragSource.addEventListener("dragstart", function(e) {
+			        var dt =  e.dataTransfer;
+			        dt.effectAllowed = document.getElementById("effectAllowed").value;
+			        dt.setData("text", "Foo");
+			    });
+
+			    dragSource.addEventListener("dragend", function(e) {
+			        var dt =  e.dataTransfer;
+			        this.innerHTML += "<br/> Drop effect at source "+dt.getDropEffect();
+			        this.innerHTML += "<br/> Drop effect at source (native) "+dt.dropEffect;
+			    });
+			    
+			    function cancelAndShowDropEffect(effect, e) {
+			        e.preventDefault();
+			        e.stopPropagation();
+			        e.returnValue = false;			        
+			    }
+			    
+			    function cancelDragAndSetDropEffect(effect, e) {
+			        var dt =  e.dataTransfer;
+			        try {
+			        	e.target.innerHTML = "effectAllowed "+e.dataTransfer.effectAllowed;
+			        } catch (E) {
+			        	e.target.innerHTML = "effectAllowed not known";
+			        }
+
+			        e.target.innerHTML += "<br>dropEffect "+e.dataTransfer.dropEffect;			     
+			    }
+
+			    function onDragExit(event) {
+			    	console.debug("Ooooh - i got a dragexit");
+			    }
+			    
+			    // dragexit event only fires on Mozilla
+
+			    var dropZoneCopy = document.querySelector("#dropZoneCopy");
+			    dropZoneCopy.addEventListener("dragenter", cancelDragAndSetDropEffect.bind(this, "copy"));
+			    dropZoneCopy.addEventListener("dragover", cancelDragAndSetDropEffect.bind(this, "copy"));
+			    dropZoneCopy.addEventListener("dragexit", onDragExit);
+			    dropZoneCopy.addEventListener("drop", cancelAndShowDropEffect.bind(this, "copy"));
+			    
+			    var dropZoneMove = document.querySelector("#dropZoneMove");
+			    dropZoneMove.addEventListener("dragenter", cancelDragAndSetDropEffect.bind(this, "move"));
+			    dropZoneMove.addEventListener("dragover", cancelDragAndSetDropEffect.bind(this, "move"));
+			    dropZoneMove.addEventListener("dragexit", onDragExit);
+			    dropZoneMove.addEventListener("drop", cancelAndShowDropEffect.bind(this, "move"));
+
+			    var dropZoneLink = document.querySelector("#dropZoneLink");
+			    dropZoneLink.addEventListener("dragenter", cancelDragAndSetDropEffect.bind(this, "link"));
+			    dropZoneLink.addEventListener("dragover", cancelDragAndSetDropEffect.bind(this, "link"));
+			    dropZoneLink.addEventListener("dragexit", onDragExit);
+			    dropZoneLink.addEventListener("drop", cancelAndShowDropEffect.bind(this, "link"));
+
+			     var dropZoneLink = document.querySelector("#dropZoneNone");
+			    dropZoneLink.addEventListener("dragenter", function(ev) { ev.stopPropagation(); ev.preventDefault() });
+			    dropZoneLink.addEventListener("dragover", function(ev) { ev.stopPropagation(); ev.preventDefault(); });
+			    dropZoneLink.addEventListener("dragexit", onDragExit);
+			    dropZoneLink.addEventListener("drop", cancelAndShowDropEffect.bind(this, "link"));
+			    
+			    
+		
+		</script>
+
+	</body>
+</html>

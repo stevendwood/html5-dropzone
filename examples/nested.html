@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drag Enter/Leave Test</title>
+		<style>
+			#paper {
+			  text-align:center;     
+			  width: 105px;    
+			  height: 105px;
+			  margin: 25px;    
+			  padding:10px;
+			  border:1px solid #E8E8E8;  
+			  background-color: #fdfd86;
+			  display:inline-block;   
+			}
+
+			[dropzone] {
+				width: 250px;
+				height: 250px;
+				border: 1px solid #ccc;
+			}
+
+			[dropzone].drag-matches {
+				background-color: #CCFFCC;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="paper" draggable="true" contentEditable>I'm a bit of paper, edit my contents</div>
+
+		<div dropzone="copy s:text/x-paper">
+			<table>
+				<tr>
+					<td>One</td><td>Two</td>
+				</tr>
+				<tr>
+					<td>Three</td><td>Four</td>
+				</tr>
+				<tr>
+					<td>Five</td><td>Six</td>
+				</tr>
+		</div>
+
+		<script src="../dist/dropzone.min.js"></script>
+		<script>
+			var paper = document.getElementById("paper");
+			draggable(paper)
+				.setData("text/x-paper", function() {
+					return paper.innerHTML;
+				})
+
+
+			paper.addEventListener("dragend", function(ev) {
+				console.debug("Drag ended ", ev.dataTransfer.dropEffect);
+			});
+
+			var dz = document.querySelector("[dropzone]");
+			dz.addEventListener("drop", function(ev) {
+				console.log(ev.target.classList.length);
+				ev.target.innerHTML = ev.dataTransfer.getData("text/x-paper");
+			});
+			
+		</script>
+	</body>
+</html>

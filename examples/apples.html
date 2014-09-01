@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Drag Test</title>
+    <style>
+      #paper {
+        text-align:center;     
+        width: 105px;    
+        height: 105px;
+        margin: 25px;    
+        padding:10px;
+        border:1px solid #E8E8E8;  
+        background-color: #fdfd86;
+        display:inline-block;   
+        font-size: 12px;
+      }
+
+      #apple {
+        width: 128px;
+        height: 128px;
+        background-image: url(images/apple.png);
+        margin: 25px;
+        position: absolute;
+        left: 250px;
+        top: 10px;
+      }
+
+      #paperbin {
+        width: 128px;
+        height: 128px;
+        background-image: url(images/empty_trash.png);
+        position: absolute;
+        top: 200px;
+      }
+
+      #recyclebin {
+        width: 128px;
+        height: 128px;
+        background-image: url(images/trashcan_for_apples.png);
+        position: absolute;
+        top: 200px;
+        left: 250px;
+      }
+
+      #recyclebin.drag-matches {
+        background-color: #FFFCCC;
+      }
+
+      #paperbin.drag-matches, #paperbin.full {
+        background-image: url(images/full_trash.png);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="paper" draggable="true" ondragstart="startDragPaper(event)">I'm a bit of paper, drag me to the bin</div>
+    <div id="apple" draggable="true" ondragstart="startDragApple(event)"></div>
+
+    <div id="paperbin" dropzone="move string:text/x-paper f:text/x-apple s:text/plain" ondrop="handleDropPaper(event)"></div>
+    <div id="recyclebin" dropzone="move s:text/x-apple s:text/x-paper" ondrop="handleDropApple(event)"></div>
+
+    <script src="../dist/dropzone.min.js"></script>
+    <script>
+
+      function startDragPaper(e) {
+        e.dataTransfer.setData("text/x-paper", "put whatever you like in here");
+      }
+
+      function startDragApple(e) {
+        e.dataTransfer.setData("text/x-apple", "put whatever you like in here");
+      }
+        
+      function handleDropPaper(e) {
+         var paper = document.querySelector("#paper");
+         paper.parentElement.removeChild(paper);
+         document.getElementById("paperbin").classList.add("full");
+      }
+
+       function handleDropApple(e) {
+         var apple = document.querySelector("#apple");
+         apple.parentElement.removeChild(apple);
+      }
+    </script>
+  </body>
+</html>

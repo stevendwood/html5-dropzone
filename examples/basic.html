@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Drag Test</title>
+		<style>
+			#paper {
+			  text-align:center;     
+			  width: 105px;    
+			  height: 105px;
+			  margin: 25px;    
+			  padding:10px;
+			  border:1px solid #E8E8E8;  
+			  background-color: #fdfd86;
+			  display:inline-block;   
+			}
+
+			#trashcan {
+				width: 128px;
+				height: 128px;
+				background-image: url(images/empty_trash.png);
+				position: absolute;
+				top: 200px;
+			}
+
+			#trashcan.drag-matches {
+				background-image: url(images/full_trash.png);
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="paper" draggable="true">I'm a bit of paper, drag me to the bin</div>
+
+		<div id="trashcan" dropzone="copy s:text/x-paper"></div>
+
+		<script src="../dist/dropzone.min.js"></script>
+		<script>
+
+			draggable(document.querySelector("#paper"))
+				.setData("text/x-paper", "I'm a bit of paper");
+
+		    function handleDrop(e) {
+		    	var paper = document.querySelector("#paper")
+				paper.parentElement.removeChild(paper);
+		    }
+		</script>
+	</body>
+</html>

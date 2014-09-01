@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Files &amp; Outside drags</title>
+		<style>
+			body {
+				font-family: Arial;
+				font-size: 75%;
+			}
+
+			[dropzone] {
+				width: 250px;
+				height: 250px;
+				border: 1px solid #ADADAD;
+				display: inline-block;
+				margin: 10px;
+				vertical-align: top;
+			}
+			
+
+			[dropzone].drag-matches {
+				background-color: #CCFFCC;
+				border: 1px solid green;
+			}
+
+			.dragReport {
+				background-color: white;
+				border: 1px solid #ADADAD;		
+				display: inline-block;	
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+		</style>
+	</head>
+	<body>
+		<p>
+			This example shows how to drag data from other applications.  Drag some text out of a text editor that allows it onto
+			the text dropzone.  
+		</p>
+		<p>
+			For files, Firefox and IE do not provide the DataTransferItem interface so
+			we can't work out whether the image is actually of the type we want.  We have to cancel the even and then check again on  i'll show the drop whether the type matched.
+		</p>
+		<div id="pngs" dropzone="copy f:image/png">
+			Drop a png file on me.
+		</div>
+
+		<div id="text" dropzone="move s:text/plain">
+			Drop some text on to me. Or drag text out of me to another application, i'll show the selected operation on dragend.
+			My default operation is to move text from the native application, if you press ctrl or alt on windows, i'll change to
+			copy or link, the selected drop effect should effect what happens to the text in the native application.
+		</div>
+
+		<script src="../dist/dropzone.min.js"></script>
+		<script>
+			document.querySelector("#pngs")
+				.addEventListener("drop",  function (e) {
+		    		e.preventDefault();
+		    		var file = e.dataTransfer.files[0];
+
+		    		var s = document.createElement("span");
+					s.classList.add("dragReport");
+					if (file.type === "image/png") {
+						s.innerHTML = "Type: "+file.type + "<br>" + "Name: "+file.name;
+					}
+
+					this.element.appendChild(s);
+		    	});
+
+			document.querySelector("#text")
+				.addEventListener("dragend", function(e) {
+					console.debug("Dragend fires ", e.dataTransfer.dropEffect);
+					console.debug("Dragend fires (custom dropEffect)", e.dataTransfer.getDropEffect());
+				});
+
+			document.querySelector("#text")
+				.addEventListener("drop", function(e) {
+					var s = document.createElement("span");
+					s.classList.add("dragReport");
+					s.innerHTML = e.dataTransfer.getData("text/plain");
+					this.appendChild(s);
+					e.preventDefault();
+				});
+
+		   
+		</script>
+	</body>
+</html>
