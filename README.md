@@ -20,6 +20,38 @@ A JavaScript library that provides a usable implementation of the HTML5 [dropzon
 
 Supports: IE10+, Chrome, Firefox, Safari
 
+###Usage
+Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.
+
+```html
+<div id="paper" draggable="true" ondragstart="startDragPaper(event)"></div>
+<div id="apple" draggable="true" ondragstart="startDragApple(event)"></div>
+    
+<div dropzone="move s:text/x-paper" ondrop="handleDropPaper(event)"></div>
+<div dropzone="move s:text/x-apple" ondrop="handleDropApple(event)"></div>
+
+<script src="dropzone.min.js"></script>
+<script>
+
+      function startDragPaper(e) {
+        e.dataTransfer.setData("text/x-paper", "Data for the x-paper drag type");
+      }
+
+      function startDragApple(e) {
+        e.dataTransfer.setData("text/x-apple", "Data for the x-apple type");
+      }
+        
+      function handleDropPaper(e) {
+         e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
+      }
+
+       function handleDropApple(e) {
+         e.dataTransfer.getData("x-paper"); // "Data for the x-apple drag type"
+      }
+      
+</script>
+```
+
 ## Why do i need a library for native drag and drop ?
 
 I've spent many months toiling with HTML5 drag and drop on different browsers, this library represents the sum of my knowledge on the subject, hopefully it will save anyone using it a lot of time and hassle.  
@@ -38,7 +70,7 @@ The deal is that on dragstart - you put data into the [DataTransfer](http://html
 dragenter and dragover at least need to be cancelled if you want an element to accept the drop, so you must implement them even if to do nothing other than cancel the drag event.
 
 ### So how to I decide whether to cancel the dragenter/dragover events ?
-The default action of the browser in this case is not to allow a drop, so we need to cancel the event it if we want to change that.  In order to decide whether or not you accept a drop - you need to consider a couple of things :
+The default action of the browser in this case is not to allow a drop, so we need to cancel the dragenter/dragover events on any drop target it if we want to change that.  In order to decide whether or not you accept a drop - you need to consider a number of things :
 
 ####Do I recognise the type of what is being dragged ?
 During dragover/enter you get access to a list of strings, these being the types of things that are currently being dragged.  Some browsers provide a list of [DataTransferItems](http://html5index.org/Drag%20and%20Drop%20-%20DataTransferItem.html) but some don't.  The data transfer item doesn't help here all that much since you only get told the "kind" of thing in addition to the type - i.e. is it a file or a string.  You cannot see exactly what is being dragged due to security considerations, which is fair enough.  
