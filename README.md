@@ -249,7 +249,7 @@ If you want to use the browsers native dropEffect property reliably to do someth
       if (event.target instanceof HTMLLIElement) {
 
        event.dataTransfer.setData("text/x-my-type", event.target.dataset.value);
-     event.dataTransfer.effectAllowed = 'copyMove'; // only allow moves
+     event.dataTransfer.effectAllowed = 'copyMove'; // only allow copies or moves
     } 
     }
 
