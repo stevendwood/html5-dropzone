@@ -1,4 +1,81 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+ (function() {
+var Type = require("./Type");
+var Kind = require("./Kind");
+
+
+ var DataTransfer = (window.DataTransfer || window.Clipboard),
+     setData,
+     getData,
+     currentDragData = {};
+
+    if (DataTransfer) {
+        setData = DataTransfer.prototype.setData;
+        getData = DataTransfer.prototype.getData;
+        currentDragData = {};
+        
+        DataTransfer.prototype.setData = function(type, value) {
+
+            try {
+                setData.call(this, type, value);
+            } catch (e) {
+                // IE as of version 11 do not accept any value other than Text and
+                // URL as the type, so handle this by storing the data in an object
+                // we can read from getData.
+                currentDragData[type] = value;
+                // TODO: Put current drag data in local storage
+                // for cross window drag.
+
+                // translate from text/plain into TEXT - should we also do this for HTML ?
+                if (type === Type.TEXT_PLAIN) {
+                    setData.call(this, Type.TEXT, value);
+                } else if (type === Type.TEXT_URI_LIST) {
+                    return setData.call(this, Type.URL, value);
+                }
+
+                // data stored on this.items wont come out on the dragover
+                // however things we add to the prototype appear to work,
+                // since you can only have one drag going on by definition,
+                // we should be OK provided we remember to take down this object
+                // on dragend.
+                DataTransfer.prototype.items = DataTransfer.prototype.items || [];
+                DataTransfer.prototype.items.push({
+                    kind: Kind.STRING,
+                    type: type,
+                    value: value
+                });
+            }
+        };
+
+        DataTransfer.prototype.getData = function(type) {
+            try {
+                return getData.call(this, type);
+            } catch (e) {
+                // We got in here probably by attempting to call
+                // with a type e.g. text/my-type, IE will explode
+                // so see if there is anything in the custom data matching
+                // what was asked.
+
+                // If not, then map any Text data onto text/plain and Url
+                // onto text/uri-list.
+                var retVal = currentDragData[type];
+                if (retVal) {
+                    return retVal;
+                } else if (type === Type.TEXT_PLAIN) {
+                    return getData.call(this, Type.TEXT);
+                } else if (type === Type.TEXT_URI_LIST) {
+                    return getData.call(this, Type.URL);
+                }
+            }
+        };
+
+        document.body.addEventListener("dragend", function() {
+            delete DataTransfer.prototype.items;
+            currentDragData = {};
+        });
+    }
+} ());
+},{"./Kind":4,"./Type":6}],2:[function(require,module,exports){
  module.exports = (function() {
 
 
@@ -130,7 +207,7 @@
 
     return DragSource;
 } ());
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
  
  module.exports = (function() { 
 
@@ -405,7 +482,7 @@
     return DropZone;
   
 }());
-},{"./Kind":3,"./Operation":4,"./Type":5}],3:[function(require,module,exports){
+},{"./Kind":4,"./Operation":5,"./Type":6}],4:[function(require,module,exports){
 
 // 
 module.exports = {
@@ -413,7 +490,7 @@ module.exports = {
     STRING: "string"
 };
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
  module.exports = {
     COPY: "copy",
     MOVE: "move",
@@ -422,7 +499,7 @@ module.exports = {
     NONE: "none",
     UNINITIALIZED: "uninitialized"
 };
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = {
     TEXT: "Text",
     URL: "Url",
@@ -431,15 +508,15 @@ module.exports = {
     TEXT_URI_LIST: "text/uri-list",
     UNKNOWN: "<unavailable>"
 };
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function() {
 
     "use strict";
+
+    require("./DataTransfer.js");
     
     var DragSource = require("./DragSource");
     var DropZone = require("./DropZone");
-
-    //require("./DataTransfer.js");
 
     window.draggable = function(element) {
         return new DragSource(element);
@@ -452,4 +529,4 @@ module.exports = {
     [].forEach.call(document.querySelectorAll("[dropzone]"), dropzone); 
 
 }());
-},{"./DragSource":1,"./DropZone":2}]},{},[6])
+},{"./DataTransfer.js":1,"./DragSource":2,"./DropZone":3}]},{},[7])

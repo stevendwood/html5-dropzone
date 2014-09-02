@@ -1,11 +1,11 @@
 (function() {
 
     "use strict";
+
+    require("./DataTransfer.js");
     
     var DragSource = require("./DragSource");
     var DropZone = require("./DropZone");
-
-    //require("./DataTransfer.js");
 
     window.draggable = function(element) {
         return new DragSource(element);

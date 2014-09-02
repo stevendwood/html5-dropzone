@@ -22,9 +22,15 @@ var Kind = require("./Kind");
                 // URL as the type, so handle this by storing the data in an object
                 // we can read from getData.
                 currentDragData[type] = value;
-                // store it as Text JSON, TODO: Put current drag data in local storage
+                // TODO: Put current drag data in local storage
                 // for cross window drag.
-                setData.call(this, Type.TEXT, JSON.stringify(currentDragData));
+
+                // translate from text/plain into TEXT - should we also do this for HTML ?
+                if (type === Type.TEXT_PLAIN) {
+                    setData.call(this, Type.TEXT, value);
+                } else if (type === Type.TEXT_URI_LIST) {
+                    return setData.call(this, Type.URL, value);
+                }
 
                 // data stored on this.items wont come out on the dragover
                 // however things we add to the prototype appear to work,
