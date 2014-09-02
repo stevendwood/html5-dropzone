@@ -1,3 +1,33 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [html5 [dropzone]](#html5-dropzone)
+    - [Usage](#usage)
+  - [Why do i need a library for native drag and drop ?](#why-do-i-need-a-library-for-native-drag-and-drop-)
+    - [Lots of events...](#lots-of-events)
+    - [So how to I decide whether to cancel the dragenter/dragover events ?](#so-how-to-i-decide-whether-to-cancel-the-dragenterdragover-events-)
+      - [Do I recognise the type of what is being dragged ?](#do-i-recognise-the-type-of-what-is-being-dragged-)
+      - [Does the drag source allow the effect I want to apply ?](#does-the-drag-source-allow-the-effect-i-want-to-apply-)
+        - [Drop Effect and Effect Allowed](#drop-effect-and-effect-allowed)
+          - [1. Should the drop be accepted only if the dropEffect set to a valid value given the effectAllowed ?](#1-should-the-drop-be-accepted-only-if-the-dropeffect-set-to-a-valid-value-given-the-effectallowed-)
+          - [2. Does the cursor update to give the user feedback on what will happen if they drop ?](#2-does-the-cursor-update-to-give-the-user-feedback-on-what-will-happen-if-they-drop-)
+          - [3. Is the dropEffect reported at the source element on dragend ?](#3-is-the-dropeffect-reported-at-the-source-element-on-dragend-)
+          - [Other notes](#other-notes)
+      - [What does all this mean ?](#what-does-all-this-mean-)
+    - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
+  - [Using ``dropzone``](#using-dropzone)
+      - [Styling the dropzone](#styling-the-dropzone)
+    - [Simple example](#simple-example)
+      - [Setting up a dropzone](#setting-up-a-dropzone)
+    - [Multiple dropzones](#multiple-dropzones)
+    - [Drag sources](#drag-sources)
+    - [Using ``draggable()``](#using-draggable)
+      - [Basic use](#basic-use)
+      - [Customising the drag image](#customising-the-drag-image)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 html5 [dropzone]
 ========
 
