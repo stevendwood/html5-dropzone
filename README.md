@@ -35,17 +35,17 @@ This example also uses the <code>draggable</code> function which avoids the need
 <script src="dropzone.min.js"></script>
 <script>
       draggable("#paper")
-        .setData("text/x-paper", "Data for the x-paper drag type");
+          .setData("text/x-paper", "Data for the x-paper drag type");
         
-    draggable("#apple")
-        .setData("text/x-apple", "Data for the x-apple drag type");
+      draggable("#apple")
+          .setData("text/x-apple", "Data for the x-apple drag type");
 
       function handleDropPaper(e) {
-         e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
-      }
+          e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
+       }
 
-       function handleDropApple(e) {
-         e.dataTransfer.getData("x-paper"); // "Data for the x-apple drag type"
+      function handleDropApple(e) {
+          e.dataTransfer.getData("x-paper"); // "Data for the x-apple drag type"
       }
       
 </script>
