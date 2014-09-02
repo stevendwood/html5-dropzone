@@ -21,26 +21,25 @@ A JavaScript library that provides a usable implementation of the HTML5 [dropzon
 Supports: IE10+, Chrome, Firefox, Safari
 
 ###Usage
-Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a valid drop effect is selected.
+Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a valid drop effect is selected.  The library tries to implement as many of the event handlers for you as possible, so all you have to do is implement what happens on drop.
+
+This example also uses the <code>draggable</code> function which avoids the need to implement a dragstart listener.
 
 ```html
-<div id="paper" draggable="true" ondragstart="startDragPaper(event)"></div>
-<div id="apple" draggable="true" ondragstart="startDragApple(event)"></div>
+<div id="paper" draggable="true"></div>
+<div id="apple" draggable="true"></div>
     
 <div dropzone="move s:text/x-paper" ondrop="handleDropPaper(event)"></div>
 <div dropzone="move s:text/x-apple" ondrop="handleDropApple(event)"></div>
 
 <script src="dropzone.min.js"></script>
 <script>
-
-      function startDragPaper(e) {
-        e.dataTransfer.setData("text/x-paper", "Data for the x-paper drag type");
-      }
-
-      function startDragApple(e) {
-        e.dataTransfer.setData("text/x-apple", "Data for the x-apple type");
-      }
+      draggable("#paper")
+        .setData("text/x-paper", "Data for the x-paper drag type");
         
+    draggable("#apple")
+        .setData("text/x-apple", "Data for the x-apple drag type");
+
       function handleDropPaper(e) {
          e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
       }
@@ -52,7 +51,7 @@ Allows you to store any data you like in the data transfer object, getting round
 </script>
 ```
 
-For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of this code which will not run on IE, and will not handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target... :
+For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of the following code which will not run on IE, and will not handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target... :
 
 ```html
 <!-- (FOR ILLUSTRATION ONLY - DOES NOT WORK !!) -->
@@ -144,6 +143,21 @@ There are three things to consider :
 
 If the dropEffect is not one of the effectAllowed values, then all browsers except IE do not accept the drop. IE allows any drop regardless of the dropEffect and the effectAllowed (this library fixes this).
 
+```javascript
+// implemented on the draggable source
+function dragStartHandler(event) {
+   event.dataTransfer.effectAllowed = "copyMove"
+}
+
+// implemented on the drop target
+function dragOverHandler(event) {
+   event.dataTransfer.dropEffect = "link";
+   ...
+}
+```
+
+In the above example the drop target cannot accept the drop as it does not specify a valid dropEffect.  This would normally work on IE but by using this library the above code will not result in the drop beina allowed on any browser.
+
 ###### 2. Does the cursor update to give the user feedback on what will happen if they drop ?
 
 Chrome & Safari will change the mouse cursor to fit the dropEffect. So does Mozilla on mac. Mozilla on windows and IE both look at the first effect they come across in the effectAllowed and set the cursor on any valid drop target to be that. Except IE who seem to always use "link" if that is in the effectAllowed e.g. if effectAllowed is "copyLink" and we set dropEffect to "link" on dragover - Mozilla will set the
@@ -151,7 +165,7 @@ cursor to "copy" but IE set it to "link".  IE seems to have "link" as always win
 
 ######3. Is the dropEffect reported at the source element on dragend ?
 
-The spec shows that the source can listen for the dragend event to see what happened.  It should look at the dropEffect within this event. Chrome, Mozilla and Safari work as you would hope here, the drop effect appears in the dragend event. In IE if the effect allowed is a simple value e.g. "copy" then any successfull drop results in this value  appearing as the dropEffect on dragend.  If the effectAllowed was a compound value like copyMove and tried to select "move" on dragover by setting the dropEffect, you're out of luck, that will come through as  dropEffect = "none" at the source on dragend. You are stuck with one cursor & one dropEffect and that is the effectAllowed set on dragstart if that effect is a simple value.     
+The spec shows that the source can listen for the dragend event to see what happened.  It should look at the dropEffect within this event. Chrome, Mozilla and Safari work as you would hope here, the drop effect appears in the dragend event. In IE if the effect allowed is a simple value e.g. "copy" then any successful drop results in this value  appearing as the dropEffect on dragend.  If the effectAllowed was a compound value like "copyMove" and the drop target tried to select "move" on dragover by setting the dropEffect, you're out of luck, that will come through as  dropEffect = "none" at the source on dragend.   
 
 ```javascript
 // implemented on the draggable source
@@ -172,23 +186,7 @@ function dragEndHandler(event) {
 
 ```
 
-Also - supposing we did this :
-
-```javascript
-// implemented on the draggable source
-function dragStartHandler(event) {
-   event.dataTransfer.effectAllowed = "copyMove"
-}
-
-// implemented on the drop target
-function dragOverHandler(event) {
-   event.dataTransfer.dropEffect = "link";
-   ...
-}
-```
-Them the drop would not be allowed, as the selected dropEffect was not one of the effectAllowed values. IE would normally allow the drop, however by using this library we bring it inline with the other browsers.
-
-Also, supposing we decided that we tried this
+But, supposing we tried this
 
 ```javascript
 // implemented on the draggable source
@@ -208,10 +206,7 @@ function dragEndHandler(event) {
 }
 
 ```
-
-Interestingly the dropEffect it seems does come through when you drag into a native application.  
-
-However, to fix this I introduced a new method you can call called getDropEffect() :
+Then the dropEffect is reported as "none" on IE, but is correctly reported on the other browsers. To fix this I introduced a new method you can call called getDropEffect() :
 
 ```javascript
 function dragEndHandler(event) {
@@ -366,7 +361,8 @@ The draggable function lets you specify nodes that can be dragged, what gets put
 <script>
     draggable(document.getElementById("draggable"))
        .setData("text/x-my-type", "Some text")
-       .setData("text/html", "some <b>HTML</b> content")
+       .setData("text/html", function() { return "some <b>HTML</b> content"; })
+       .effectAllowed("copyMove");
 </script>
 ```
 
@@ -376,9 +372,10 @@ The above is equivalent to :
 document.getElementById("draggable").addEventListener("dragstart", function(e) {
   e.dataTransfer.setData("text/x-my-type", "Some text");
   e.dataTransfer.setData("text/html", "some <b>HTML</b> content");
+  e.dataTransfer.effectAllowed = "copyMove";
 });
 ```
-however, the above sample will not work cross browser without this library.
+The above sample will not work cross browser without this library but it will once you use it so you don't have to use draggable for the above if you don't want to.  One other thing is that the value you provide for a type can be a string value or a function that produces a string.  if it's a function, it gets called when the drag starts.
 
 #### Customising the drag image
 

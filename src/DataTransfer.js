@@ -1,6 +1,6 @@
  (function() {
 var Type = require("./Type");
-    var Kind = require("./Kind");
+var Kind = require("./Kind");
 
 
  var DataTransfer = (window.DataTransfer || window.Clipboard),
