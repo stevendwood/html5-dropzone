@@ -39,6 +39,9 @@
 				<option value="uninitiallized">uninitiallized</option>
 			</select>
 		</p>
+		<p>
+			Allow keyboard modifiers to specify dropEffect : <input id="keyboardMods" type="checkbox" checked>
+		</p>
 		
 		<p> On <a href="www.micrsoft.com">Windows</a> pressing "ctrl" while dragging any drop target switches the dropEffect to be "copy" and pressing "Alt" switches it to "link".  This overrides the defaults that the boxes select when you drag over them. </p>
 
@@ -55,7 +58,6 @@
 			        var dt =  e.dataTransfer;
 			        dt.effectAllowed = document.getElementById("effectAllowed").value;
 			        dt.setData("text", "Foo");
-			       // dt.setData("text/plain", "Foo");
 			    });
 
 			    dragSource.addEventListener("dragend", function(e) {
@@ -78,21 +80,23 @@
 			        var dt =  e.dataTransfer;
 			        e.target.innerHTML = "effectAllowed "+e.dataTransfer.effectAllowed;
 			        // here's the problem on a mac...these are the other way round...
-			        if (e.altKey) { // means copy on a mac...
-			        	effect = "link";
-			        } else if (e.ctrlKey) {
-			        	effect = "copy";
-			        } 
+			        if (document.getElementById("keyboardMods").checked) {
+				        if (e.altKey) { // means copy on a mac...
+				        	effect = "link";
+				        } else if (e.ctrlKey) {
+				        	effect = "copy";
+				        } 
+				    }
 			        dt.dropEffect = effect;
 			        dropEffect = effect;
 			        e.target.innerHTML += "<br>dropEffect "+e.dataTransfer.dropEffect;
 
-			        if (dt.effectAllowed === "all" || dt.effectAllowed === "uninitialized" || dt.effectAllowed.toUpperCase().indexOf(effect.toUpperCase()) > -1) {
+			     //   if (dt.effectAllowed === "all" || dt.effectAllowed === "uninitialized" || dt.effectAllowed.toUpperCase().indexOf(effect.toUpperCase()) > -1) {
 				        e.preventDefault();
 				        e.stopPropagation();
 				        e.cancelBubble = true;
 				        return false;
-				    }
+				   // }
 			    }
 
 			    function onDragExit(event) {

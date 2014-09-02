@@ -78,10 +78,19 @@
     }
 
     var DragSource = function(element) {
-        this.element = element;
-        this.items = {};
-        element.setAttribute("draggable", true);
-        element.addEventListener("dragstart", encodeItems.bind(this));
+        if (typeof element === "string") {
+            element = document.querySelector(element);
+        }
+
+        // cheap fallible test to see if we found an element
+        if (element && element.addEventListener) {
+            this.element = element;
+            this.items = {};
+            element.setAttribute("draggable", true);
+            element.addEventListener("dragstart", encodeItems.bind(this));
+        } else {
+            throw "Invalid element or selector specified as dragsource "+element;
+        }
     };
 
     DragSource.prototype = {

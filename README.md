@@ -156,7 +156,7 @@ function dragOverHandler(event) {
 }
 ```
 
-In the above example the drop target cannot accept the drop as it does not specify a valid dropEffect.  This would normally work on IE but by using this library the above code will not result in the drop beina allowed on any browser.
+In the above example the drop target cannot accept the drop as it does not specify a valid dropEffect.  This would not normally work on IE but by using this library the above code will result in the drop not being allowed on any browser.
 
 ###### 2. Does the cursor update to give the user feedback on what will happen if they drop ?
 
