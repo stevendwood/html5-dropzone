@@ -1,12 +1,12 @@
  (function() {
-var Type = require("./Type");
-var Kind = require("./Kind");
+    var Type = require("./Type");
+    var Kind = require("./Kind");
 
 
- var DataTransfer = (window.DataTransfer || window.Clipboard),
-     setData,
-     getData,
-     currentDragData = {};
+    var DataTransfer = (window.DataTransfer || window.Clipboard),
+        setData,
+        getData,
+        currentDragData = {};
 
     if (DataTransfer) {
         setData = DataTransfer.prototype.setData;

@@ -11,7 +11,10 @@
 			  padding:10px;
 			  border:1px solid #E8E8E8;  
 			  background-color: #fdfd86;
-			  display:inline-block;   
+			  display:inline-block;
+			  position: absolute;
+			  top: 0px;
+			  left: 0px;
 			}
 
 			#trashcan {
@@ -33,11 +36,32 @@
 
 		<div id="trashcan" dropzone="copy s:text/x-paper"></div>
 
-		<script src="../dist/dropzone.min.js"></script>
+		<script src="../dist/dropzone.js"></script>
 		<script>
 
+		var offsetX, offsetY;
 			draggable(document.querySelector("#paper"))
-				.setData("text/x-paper", "I'm a bit of paper");
+				.setData("text/x-paper", "I'm a bit of paper")
+				.on("dragstart", function(ev) {
+					var rect = this.element.getBoundingClientRect(),
+					 x = ev.clientX,
+        			 y = ev.clientY;
+
+        			offsetX = x - rect.left;
+        			offsetY = y - rect.top;
+console.debug("Drag started ", offsetX, " from the left and ", offsetY, " from the top");
+					setTimeout(function() {
+						this.element.style.opacity = 0;
+					}.bind(this));
+				})
+				.on("dragend", function(ev) {
+					this.element.style.opacity = 1;
+					this.element.style.position = "absolute";
+					
+					this.element.style.left = (ev.clientX - offsetX ) + "px";
+					this.element.style.top = (ev.clientY  +8 - offsetY) + "px";
+				});
+				
 
 		    function handleDrop(e) {
 		    	var paper = document.querySelector("#paper")

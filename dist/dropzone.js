@@ -1,13 +1,13 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
  (function() {
-var Type = require("./Type");
-var Kind = require("./Kind");
+    var Type = require("./Type");
+    var Kind = require("./Kind");
 
 
- var DataTransfer = (window.DataTransfer || window.Clipboard),
-     setData,
-     getData,
-     currentDragData = {};
+    var DataTransfer = (window.DataTransfer || window.Clipboard),
+        setData,
+        getData,
+        currentDragData = {};
 
     if (DataTransfer) {
         setData = DataTransfer.prototype.setData;
@@ -166,6 +166,15 @@ var Kind = require("./Kind");
             this.items = {};
             element.setAttribute("draggable", true);
             element.addEventListener("dragstart", encodeItems.bind(this));
+            element.addEventListener("dragstart", function(ev) {
+                if (this.effectAllowed) {
+                    if (typeof this.effectAllowed === "function") {
+                        ev.dataTransfer.effectAllowed = this.effectAllowed(); 
+                    } else {
+                        ev.dataTransfer.effectAllowed = this.effectAllowed;    
+                    }
+                }
+            }.bind(this));
         } else {
             throw "Invalid element or selector specified as dragsource "+element;
         }
@@ -201,6 +210,11 @@ var Kind = require("./Kind");
 
         on: function(eventName, fn) {
             this.element.addEventListener(eventName, fn.bind(this));
+            return this;
+        },
+
+        effectAllowed: function(effectAllowed) {
+            this.effectAllowed = effectAllowed;
             return this;
         }
     };
@@ -267,13 +281,6 @@ var Kind = require("./Kind");
             // another application...
         }
 
-      if (!this.element.classList.contains(effect)) {
-        this.element.classList.remove(Operation.COPY);
-        this.element.classList.remove(Operation.MOVE);
-        this.element.classList.remove(Operation.LINK);
-        this.element.classList.add(effect);
-      }
-
       selectedDropEffect = effect;
 
       dragItems = dataTransfer.items;
@@ -328,6 +335,14 @@ var Kind = require("./Kind");
           }
       }, this);
 
+      if (accepts) {
+        if (!this.element.classList.contains(effect)) {
+          this.element.classList.remove(Operation.COPY);
+          this.element.classList.remove(Operation.MOVE);
+          this.element.classList.remove(Operation.LINK);
+          this.element.classList.add(effect);
+        }
+      }
 
       return accepts;
   }

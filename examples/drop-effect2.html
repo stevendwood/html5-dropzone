@@ -50,18 +50,16 @@
 		<script src="../dist/dropzone.min.js"></script>
 		<script>
 
-			    var dragSource = document.querySelector("[draggable='true']");
-				dragSource.addEventListener("dragstart", function(e) {
-			        var dt =  e.dataTransfer;
-			        dt.effectAllowed = document.getElementById("effectAllowed").value;
-			        dt.setData("text", "Foo");
-			    });
-
-			    dragSource.addEventListener("dragend", function(e) {
-			        var dt =  e.dataTransfer;
-			        this.innerHTML += "<br/> Drop effect at source "+dt.getDropEffect();
-			        this.innerHTML += "<br/> Drop effect at source (native) "+dt.dropEffect;
-			    });
+			   draggable("[draggable='true']")
+					.setData("text/plain", "Foo")
+			        .effectAllowed(function () { 
+			        	return document.getElementById("effectAllowed").value
+			        })
+			   		.on("dragend", function(e) {
+			        	var dt =  e.dataTransfer;
+			        	this.innerHTML += "<br/> Drop effect at source "+dt.getDropEffect();
+			        	this.innerHTML += "<br/> Drop effect at source (native) "+dt.dropEffect;
+			    	});
 			    
 			    function cancelAndShowDropEffect(effect, e) {
 			        e.preventDefault();

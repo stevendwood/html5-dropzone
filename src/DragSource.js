@@ -88,6 +88,15 @@
             this.items = {};
             element.setAttribute("draggable", true);
             element.addEventListener("dragstart", encodeItems.bind(this));
+            element.addEventListener("dragstart", function(ev) {
+                if (this.effectAllowed) {
+                    if (typeof this.effectAllowed === "function") {
+                        ev.dataTransfer.effectAllowed = this.effectAllowed(); 
+                    } else {
+                        ev.dataTransfer.effectAllowed = this.effectAllowed;    
+                    }
+                }
+            }.bind(this));
         } else {
             throw "Invalid element or selector specified as dragsource "+element;
         }
@@ -123,6 +132,11 @@
 
         on: function(eventName, fn) {
             this.element.addEventListener(eventName, fn.bind(this));
+            return this;
+        },
+
+        effectAllowed: function(effectAllowed) {
+            this.effectAllowed = effectAllowed;
             return this;
         }
     };

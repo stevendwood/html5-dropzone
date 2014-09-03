@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [html5 [dropzone]](#html5-dropzone)
-    - [Usage](#usage)
+  - [Usage](#usage)
   - [Why do i need a library for native drag and drop ?](#why-do-i-need-a-library-for-native-drag-and-drop-)
     - [Lots of events...](#lots-of-events)
     - [So how to I decide whether to cancel the dragenter/dragover events ?](#so-how-to-i-decide-whether-to-cancel-the-dragenterdragover-events-)
@@ -17,14 +17,16 @@
       - [What does all this mean ?](#what-does-all-this-mean-)
     - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
   - [Using ``dropzone``](#using-dropzone)
-      - [Styling the dropzone](#styling-the-dropzone)
-    - [Simple example](#simple-example)
       - [Setting up a dropzone](#setting-up-a-dropzone)
+    - [Styling the dropzone](#styling-the-dropzone)
     - [Multiple dropzones](#multiple-dropzones)
-    - [Drag sources](#drag-sources)
+  - [Drag sources](#drag-sources)
     - [Using ``draggable()``](#using-draggable)
       - [Basic use](#basic-use)
+        - [<code>setData</code>](#codesetdatacode)
+        - [<code>effectAllowed</code>](#codeeffectallowedcode)
       - [Customising the drag image](#customising-the-drag-image)
+      - [<code>ghost</code>](#codeghostcode)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -44,13 +46,13 @@ A JavaScript library that provides a usable implementation of the HTML5 [dropzon
 <div dropzone="copy f:text/plain s:text/plain"></div>
 ```
 
-[Multiple dropzone demo](http://stevendwood.github.io/examples/apples.html) - This demo shows how you can have different dropzones that can be fussy about what they accept even on IE.  
+[Multiple dropzone demo](http://stevendwood.github.io/examples/cards.html) - This demo is based on a JQuery drag and drop example and shows how you can have different dropzones that can be fussy about what they accept even on IE.  
 
 [Custom drag image demo](http://stevendwood.github.io/examples/custom-drag-image.html) - This demo shows a custom drag image or ghost, works on IE as well despite the lack of a setDragImage function.
 
 Supports: IE10+, Chrome, Firefox, Safari
 
-###Usage
+##Usage
 Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a valid drop effect is selected.  The library tries to implement as many of the event handlers for you as possible, so all you have to do is implement what happens on drop.
 
 This example also uses the <code>draggable</code> function which avoids the need to implement a dragstart listener.
@@ -304,16 +306,10 @@ The dropzone attribute makes an element able to accept drops. If an element has 
 This example will make the element accept any drag that contains data text/plain or text/x-my-custom-type. 
 
 
-#### Styling the dropzone
-Whenever the user drags something that matches over the dropzone, the class <code>drag-matches</code> is added to the target.  One (of many) annoying issue(s) when using drag and drop is that if the drop target contains other child elements, [the dragleave event will fire when you go over the child](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element), however the <code>drag-matches</code> class is only added or removed when you enter or leave the drop target, much the same as mousenter/works. 
 
-
-### Simple example
-
-A very simple example of drag and drop, this demo (examples/basic.html) lets the user drag a piece of paper into a trash can.  
 #### Setting up a dropzone
 
-Here's a simple example that allows the user to drag the element with id "paper" and drop it on the div with id "trashcan".  Using this library (and the dropzone attribute), there is no need to cancel the dragenter and dragover events and provide styling in the dragenter/dragleave events.
+This simple example allows the user to drag the element with id "paper" and drop it on the div with id "trashcan".  Using this library (and the dropzone attribute), there is no need to cancel the dragenter and dragover events and provide styling in the dragenter/dragleave events.
 
 ```html
 <div id="paper" draggable="true" ondragstart="startDrag(event)">I'm a bit of paper</div>
@@ -354,6 +350,9 @@ function handleDrop(e) {
 
 ```
 
+### Styling the dropzone
+Whenever the user drags something that matches over the dropzone, the class <code>drag-matches</code> is added to the target.  One (of many) annoying issue(s) when using drag and drop is that if the drop target contains other child elements, [the dragleave event will fire when you go over the child](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element), however the <code>drag-matches</code> class is only added or removed when you enter or leave the drop target, much the same as mousenter/works. 
+
 ### Multiple dropzones
 Now we can setup a 2nd dragsource and dropzone.  The 2nd dragsource is an apple, and since apples cannot go into a trashcan for paper, we need a 2nd dropzone.  This example demonstrates how dropzones can selectively accept or reject based on what is being dragged. Note that the recycle bin can accept either the paper or the apple but the paper bin can only accept the paper. 
 
@@ -378,11 +377,15 @@ Now we can setup a 2nd dragsource and dropzone.  The 2nd dragsource is an apple,
     </script>
 ```
 
-### Drag sources
+## Drag sources
+
+
 
 ### Using ``draggable()``
 
-The draggable function lets you specify nodes that can be dragged, what gets put into the data transfer and a way to customise the drag image.  Depending on what you want to do, you don't have to use this function at all, however, if you want a customised drag image to work cross browser (read on IE) then you need to use it...
+Depending on what you want to do, you don't have to use this function at all, however, if you want a customised drag image to work cross browser (read on IE) then you do need to use it.
+
+The draggable function lets you specify nodes that can be dragged, what gets put into the data transfer, what the allowed effects are and a way to customise the drag image.  
 
 #### Basic use
 
@@ -407,9 +410,22 @@ document.getElementById("draggable").addEventListener("dragstart", function(e) {
 ```
 The above sample will not work cross browser without this library but it will once you use it so you don't have to use draggable for the above if you don't want to.  One other thing is that the value you provide for a type can be a string value or a function that produces a string.  if it's a function, it gets called when the drag starts.
 
+##### <code>setData</code>
+Equivalent to the DataTransfer.setData function, but saves you having to implement dragstart.  The 2nd param can be a string or a function that produces a string, gets called on drag start.
+
+##### <code>effectAllowed</code>
+Equivalent to setting the DataTransfer.effectAllowed property, but saves you having to implement dragstart.  The 2nd param can be a string or a function that produces a string, gets called on drag start.
+
 #### Customising the drag image
 
 One of the major holes of the IE implementation is the inability to provide a custom drag image.  The spec actually allows you to use a DOM element as the custom drag image, the trick being that it has to be visible.  To provide a custom drag image use the "ghost" function.  e.g consider a multi-select list.  If the user selects more than one thing, then we need to be able to indicate in the drag that more than one thing is being dragged.  In this example we provide a custom ghost image that addes into a UL a clone of all the list items having the "selected" class.
+
+####<code>ghost</code>
+
+[Custom drag image demo](http://stevendwood.github.io/examples/custom-drag-image.html)
+
+The ghost function takes as an argument either a DOM node or a function that produces a DOM node and is called at drag start.  Typically this will be used in setDragImage for browsers that support.  Using this function allows you to supply any DOM node (doesn't have to be on the page).  e.g. :
+
 
 ```javascript
 var listItems = [].slice.call(document.querySelectorAll("li"), 0);
@@ -447,4 +463,4 @@ var listItems = [].slice.call(document.querySelectorAll("li"), 0);
 
 This produces the following :
 
-![Alt text](/examples/images/custom-drag-image.png)
+[Custom drag image demo](http://stevendwood.github.io/examples/multi-select.html)

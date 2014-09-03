@@ -57,13 +57,6 @@
             // another application...
         }
 
-      if (!this.element.classList.contains(effect)) {
-        this.element.classList.remove(Operation.COPY);
-        this.element.classList.remove(Operation.MOVE);
-        this.element.classList.remove(Operation.LINK);
-        this.element.classList.add(effect);
-      }
-
       selectedDropEffect = effect;
 
       dragItems = dataTransfer.items;
@@ -118,6 +111,14 @@
           }
       }, this);
 
+      if (accepts) {
+        if (!this.element.classList.contains(effect)) {
+          this.element.classList.remove(Operation.COPY);
+          this.element.classList.remove(Operation.MOVE);
+          this.element.classList.remove(Operation.LINK);
+          this.element.classList.add(effect);
+        }
+      }
 
       return accepts;
   }

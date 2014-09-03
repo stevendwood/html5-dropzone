@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cards</title>
+    <link rel="stylesheet" href="css/cards.css">
+	</head>
+	<body>
+  <p> This demo is based on the jquery drag and drop demo <a href="http://www.elated.com/res/File/articles/development/javascript/jquery/drag-and-drop-with-jquery-your-essential-guide/card-game.html">here</a>
+		<div id="cardPile">
+			<div class="card">1</div>
+			<div class="card">2</div>
+			<div class="card">3</div>
+			<div class="card">4</div>
+			<div class="card">5</div>
+			<div class="card">6</div>
+			<div class="card">7</div>
+			<div class="card">8</div>
+			<div class="card">9</div>
+			<div class="card">10</div>
+		</div>
+
+		<div id="cardSlots">
+			<div id="card1"  dropzone="move s:text/x-card1"  class="ui-droppable">one</div>
+			<div id="card2"  dropzone="move s:text/x-card2"  class="ui-droppable">two</div>
+			<div id="card3"  dropzone="move s:text/x-card3"  class="ui-droppable">three</div>
+			<div id="card4"  dropzone="move s:text/x-card4"  class="ui-droppable">four</div>
+			<div id="card5"  dropzone="move s:text/x-card5"  class="ui-droppable">five</div>
+			<div id="card6"  dropzone="move s:text/x-card6"  class="ui-droppable">six</div>
+			<div id="card7"  dropzone="move s:text/x-card7"  class="ui-droppable">seven</div>
+			<div id="card8"  dropzone="move s:text/x-card8"  class="ui-droppable">eight</div>
+			<div id="card9"  dropzone="move s:text/x-card9"  class="ui-droppable">nine</div>
+			<div id="card10" dropzone="move s:text/x-card10" class="ui-droppable">ten</div>
+    </div>
+		<script src="../dist/dropzone.js"></script>
+		<script>
+	
+
+
+      var customDragType = "text/x-card",
+          pile = document.getElementById("cardPile");
+
+      function toArray(obj) {
+        var array = [];
+        // iterate backwards ensuring that length is an UInt32
+        for (var i = obj.length >>> 0; i--;) { 
+          array[i] = obj[i];
+        }
+        return array;
+      }
+
+      // shuffle the cards
+      toArray(document.querySelectorAll(".card")).sort(function() {
+        return Math.random() - .5;   
+      }).forEach(function(card) {
+        cardPile.appendChild(card);
+      });
+
+
+			function dropHandler(ev)  {
+				var target = ev.target;
+
+				target.classList.add("correct");
+				target.innerHTML = ev.dataTransfer.getData("text/plain");
+			}
+
+			function dragEndHandler(ev) {
+				var dropEffect = ev.dataTransfer.getDropEffect();
+				if (dropEffect === "move") {
+					ev.target.style.visibility = "hidden";
+				}			
+			}
+
+      function makeCardDraggable(cardNode) {
+        // make the card draggable, with 2 pieces of data e.g.
+        // text/x-card5 -> 5
+        // text/plain -> 5
+        // set effect allowed to be move only and attach a drag end handler
+        draggable(cardNode)
+          .setData(customDragType + cardNode.innerHTML, cardNode.innerHTML)
+          .setData("text/plain", cardNode.innerHTML)
+          .effectAllowed("move")
+          .on("dragend", dragEndHandler)
+      }
+
+			toArray(document.querySelectorAll(".card")).forEach(makeCardDraggable);
+
+			toArray(document.querySelectorAll(".ui-droppable")).forEach(function(n) {
+        n.addEventListener("drop", dropHandler);
+      });
+
+		</script>
+	</body>
+</html>
