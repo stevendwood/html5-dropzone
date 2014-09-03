@@ -2,7 +2,8 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [html5 [dropzone]](#html5-dropzone)
+- [html5 [dropzone]
+](#html5-dropzone)
   - [Usage](#usage)
   - [Why do i need a library for native drag and drop ?](#why-do-i-need-a-library-for-native-drag-and-drop-)
     - [Lots of events...](#lots-of-events)
@@ -350,23 +351,23 @@ Now we can setup a 2nd dragsource and dropzone.  The 2nd dragsource is an apple,
 
 ```html
 <div id="paper" draggable="true" ondragstart="startDragPaper(event)">I'm a bit of paper, drag me to the bin</div>
-    <div id="apple" draggable="true" ondragstart="startDragApple(event)"></div>
+<div id="apple" draggable="true" ondragstart="startDragApple(event)"></div>
 
-    <div id="paperbin" dropzone="move string:text/x-paper" ondrop="handleDropPaper(event)"></div>
-    <div id="recyclebin" dropzone="move s:text/x-apple s:text/x-paper" ondrop="handleDropApple(event)"></div>
+<div id="paperbin" dropzone="move string:text/x-paper" ondrop="handleDropPaper(event)"></div>
+<div id="recyclebin" dropzone="move s:text/x-apple s:text/x-paper" ondrop="handleDropApple(event)"></div>
 
-    <script>
+<script>
 
-      function startDragPaper(e) {
-        e.dataTransfer.setData("text/x-paper", "put whatever you like in here");
-      }
+  function startDragPaper(e) {
+    e.dataTransfer.setData("text/x-paper", "put whatever you like in here");
+  }
 
-      function startDragApple(e) {
-        e.dataTransfer.setData("text/x-apple", "put whatever you like in here");
-      }
+  function startDragApple(e) {
+    e.dataTransfer.setData("text/x-apple", "put whatever you like in here");
+  }
         
-     // drop handlers not shown
-    </script>
+  // drop handlers not shown
+</script>
 ```
 
 ## Drag sources
