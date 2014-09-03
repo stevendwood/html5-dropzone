@@ -1,30 +1,37 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [html5 [dropzone]](#html5-dropzone)
-  - [Features](#features)
-  - [Usage](#usage)
-  - [Why do i need a library for native drag and drop ?](#why-do-i-need-a-library-for-native-drag-and-drop-)
-  - [Using ``dropzone``](#using-dropzone)
-      - [Setting up a dropzone](#setting-up-a-dropzone)
-    - [Styling the dropzone](#styling-the-dropzone)
-    - [Multiple dropzones](#multiple-dropzones)
-  - [Drag sources](#drag-sources)
-    - [Using ``draggable()``](#using-draggable)
-      - [Basic use](#basic-use)
-        - [<code>setData()</code>](#codesetdatacode)
-        - [<code>effectAllowed()</code>](#codeeffectallowedcode)
-      - [Customising the drag image](#customising-the-drag-image)
-      - [<code>ghost()</code>](#codeghostcode)
-    - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 #html5 [dropzone]
 
 
 A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, eases implementation of HTML5 drag and drop apps  and gets drag and drop to work in the intended HTML 5 style cross browser.  
+
+
+[Multiple dropzone demo](http://stevendwood.github.io/examples/cards.html) - This demo is based on a JQuery drag and drop example and shows how you can have different dropzones that can be fussy about what they accept even on IE.  
+
+[Custom drag image demo](http://stevendwood.github.io/examples/custom-drag-image.html) - This demo shows a custom drag image or ghost, works on IE as well despite the lack of a setDragImage function.
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+
+- [Features](#features)
+ - [Usage](#usage)
+ - [Why do i need a library for native drag and drop ?](#why-do-i-need-a-library-for-native-drag-and-drop-)
+ - [Using ``dropzone``](#using-dropzone)
+    - [Setting up a dropzone](#setting-up-a-dropzone)
+  - [Styling the dropzone](#styling-the-dropzone)
+  - [Multiple dropzones](#multiple-dropzones)
+ - [Drag sources](#drag-sources)
+  - [Using ``draggable()``](#using-draggable)
+    - [Basic use](#basic-use)
+      - [<code>setData()</code>](#codesetdatacode)
+      - [<code>effectAllowed()</code>](#codeeffectallowedcode)
+    - [Customising the drag image](#customising-the-drag-image)
+    - [<code>ghost()</code>](#codeghostcode)
+  - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ##Features
 
@@ -91,11 +98,6 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
                 return p;
             });
   ```
-  
-
-[Multiple dropzone demo](http://stevendwood.github.io/examples/cards.html) - This demo is based on a JQuery drag and drop example and shows how you can have different dropzones that can be fussy about what they accept even on IE.  
-
-[Custom drag image demo](http://stevendwood.github.io/examples/custom-drag-image.html) - This demo shows a custom drag image or ghost, works on IE as well despite the lack of a setDragImage function.
 
 
 
@@ -368,7 +370,12 @@ function handleDrop(e) {
 ```
 
 ### Styling the dropzone
-Whenever the user drags something that matches over the dropzone, the class <code>drag-matches</code> is added to the target.  One (of many) annoying issue(s) when using drag and drop is that if the drop target contains other child elements, [the dragleave event will fire when you go over the child](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element), however the <code>drag-matches</code> class is only added or removed when you enter or leave the drop target, much the same as mousenter/works. 
+Whenever the user drags something that matches over the dropzone, the class <code>drag-matches</code> is added to the target.  One (of many) annoying issue(s) when using drag and drop is that if the drop target contains other child elements, [the dragleave event will fire when you go over the child](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element), however the <code>drag-matches</code> class is only added or removed when you enter or leave the drop target, much the same as mousenter/works.   The following CSS classes are added to dropzones :
+
+1. <code>drag-matches</code> Added when the dropzone can accept a drop.
+2. <code>copy</code> Added when drag matches and the dropEffect is copy.
+3. <code>move</code> Added when drag matches and the dropEffect is move.
+4. <code>link</code> Added when drag matches and the dropEffect is link.
 
 ### Multiple dropzones
 Now we can setup a 2nd dragsource and dropzone.  The 2nd dragsource is an apple, and since apples cannot go into a trashcan for paper, we need a 2nd dropzone.  This example demonstrates how dropzones can selectively accept or reject based on what is being dragged. Note that the recycle bin can accept either the paper or the apple but the paper bin can only accept the paper. 
