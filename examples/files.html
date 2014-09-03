@@ -65,7 +65,7 @@
 						s.innerHTML = "Type: "+file.type + "<br>" + "Name: "+file.name;
 					}
 
-					this.element.appendChild(s);
+					this.appendChild(s);
 		    	});
 
 			document.querySelector("#text")
@@ -82,6 +82,11 @@
 					this.appendChild(s);
 					e.preventDefault();
 				});
+
+				document.body.addEventListener("drop",  function (e) {
+		    		e.preventDefault();
+		    		e.stopPropagation();
+		    	});
 
 		   
 		</script>
