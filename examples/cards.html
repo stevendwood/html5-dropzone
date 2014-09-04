@@ -60,6 +60,8 @@
 
 		      	target.classList.add("correct");
 		      	target.innerHTML = ev.dataTransfer.getData("text/plain");
+
+		      	ev.preventDefault();
 		    }
 
 		    function dragEndHandler(ev) {
