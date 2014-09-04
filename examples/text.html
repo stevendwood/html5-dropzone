@@ -26,13 +26,16 @@
 
 		<script src="../dist/dropzone.min.js"></script>
 		<script>
-			dropzone(document.querySelector("#trashcan"))
-				.on("drop", handleDrop);
 
-		    function handleDrop(e) {
-		    	var report = document.querySelector("#report");
-				report.innerHTML = e.dataTransfer.getData("Text");
-		    }
+		 function handleDrop(e) {
+		    var report = document.querySelector("#report");
+			report.innerHTML = e.dataTransfer.getData("Text");
+		}
+
+		document.querySelector("#trashcan").addEventListener("drop", handleDrop)
+				
+
+		   
 		</script>
 	</body>
 </html>

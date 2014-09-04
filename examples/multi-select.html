@@ -49,7 +49,7 @@
 		</ul>
 
 		<div id="dropZone" dropzone="copy s:fruits"></div>
-		<script src="../dist/dropzone.min.js"></script>
+		<script src="../dist/dropzone.js"></script>
 		<script>
 
 		var listItems = [].slice.call(document.querySelectorAll("li"), 0);
@@ -74,6 +74,11 @@
 					});
 
 					return dragImg;
+				})
+				.on("dragstart", function(ev) {
+					//ev.target.style.opacity = "0.5";
+					console.debug("I got drag start");
+					this.element.style.opacity = "0.5";
 				});
 			});
 

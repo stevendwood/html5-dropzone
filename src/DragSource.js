@@ -25,6 +25,18 @@ module.exports = (function() {
         }, this);
     }
 
+    function applyEffectAllowed(ev) {
+      
+        if (this.effectAllowed) {
+            if (typeof this.effectAllowed === "function") {
+                ev.dataTransfer.effectAllowed = this.effectAllowed();
+            } else {
+                ev.dataTransfer.effectAllowed = this.effectAllowed;
+            }
+        }
+    }
+    
+
     function ghost(event) {
         var dragImage,
             style,
@@ -73,6 +85,10 @@ module.exports = (function() {
             //
             // 
             dragImage.addEventListener("dragstart", encodeItems.bind(this));
+            dragImage.addEventListener("dragstart", function(ev) {
+               this.dragStartListeners.forEach(function(l) { l(ev); });
+            });
+            dragImage.addEventListener("dragstart", applyEffectAllowed.bind(this));
             dragImage.dragDrop();
         }
     }
@@ -88,15 +104,7 @@ module.exports = (function() {
             this.items = {};
             element.setAttribute("draggable", true);
             element.addEventListener("dragstart", encodeItems.bind(this));
-            element.addEventListener("dragstart", function(ev) {
-                if (this.effectAllowed) {
-                    if (typeof this.effectAllowed === "function") {
-                        ev.dataTransfer.effectAllowed = this.effectAllowed();
-                    } else {
-                        ev.dataTransfer.effectAllowed = this.effectAllowed;
-                    }
-                }
-            }.bind(this));
+            element.addEventListener("dragstart", applyEffectAllowed.bind(this));
         } else {
             throw "Invalid element or selector specified as dragsource " + element;
         }
@@ -123,7 +131,7 @@ module.exports = (function() {
                     ev.preventDefault();
                     applyGhost(ev);
                 });
-            } else {
+            } else { 
                 this.element.addEventListener("dragstart", applyGhost);
             }
 
@@ -132,6 +140,10 @@ module.exports = (function() {
 
         on: function(eventName, fn) {
             this.element.addEventListener(eventName, fn.bind(this));
+            if (eventName === "dragstart" && !setDragImage) {
+                this.dragStartListeners = this.dragStartListeners || [];
+                this.dragStartListeners.push(fn.bind(this));
+            }
             return this;
         },
 
