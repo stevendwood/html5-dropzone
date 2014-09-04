@@ -29,7 +29,14 @@
 
 		 function handleDrop(e) {
 		    var report = document.querySelector("#report");
-			report.innerHTML = e.dataTransfer.getData("Text");
+		    var asHTML = e.dataTransfer.getData("text/html");
+		    if (asHTML) {
+		    	report.innerHTML = asHTML;
+		    } else {
+				report.innerHTML = e.dataTransfer.getData("text/plain");
+			}
+
+			e.preventDefault();
 		}
 
 		document.querySelector("#trashcan").addEventListener("drop", handleDrop)
