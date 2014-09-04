@@ -6,9 +6,9 @@
 A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, eases implementation of HTML5 drag and drop apps  and gets drag and drop to work in the intended HTML 5 style cross browser.  
 
 
-[Multiple dropzone demo](http://stevendwood.github.io/examples/cards.html) - This demo is based on a JQuery drag and drop example and shows how you can have different dropzones that can be fussy about what they accept even on IE.  
+[Multiple dropzone demo](http://stevendwood.github.io/html5-dropzone/examples/cards.html) - This demo is based on a JQuery drag and drop example and shows how you can have different dropzones that can be fussy about what they accept even on IE.  
 
-[Custom drag image demo](http://stevendwood.github.io/examples/custom-drag-image.html) - This demo shows a custom drag image or ghost, works on IE as well despite the lack of a setDragImage function.
+[Custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/custom-drag-image.html) - This demo shows a custom drag image or ghost, works on IE as well despite the lack of a setDragImage function.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -444,7 +444,7 @@ One of the major holes of the IE implementation is the inability to provide a cu
 
 #####<code>ghost()</code>
 
-[Custom drag image demo](http://stevendwood.github.io/examples/custom-drag-image.html)
+[Custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/custom-drag-image.html)
 
 The ghost function takes as an argument either a DOM node or a function that produces a DOM node and is called at drag start.  Typically this will be used in setDragImage for browsers that support.  Using this function allows you to supply any DOM node (doesn't have to be on the page).  e.g. :
 
@@ -485,7 +485,7 @@ document.getElementById("dropZone")
 
 This produces the following :
 
-[Custom drag image demo](http://stevendwood.github.io/examples/multi-select.html)
+[Custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/multi-select.html)
 
 ####<code>event.getDropEffect()</code>
 If you want to use the browsers native dropEffect property reliably to do something to the source element based on dropEffect - then you must allow only one effectAllowed copy, move or link if you do not set it it will become "copy".  Otherwise you should use the getDropEvent function in the dragend handler which reliably works in IE for compund values of the effectAllowed property.
