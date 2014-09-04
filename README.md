@@ -80,7 +80,7 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
        });
     ```
     *(on Firefox and IE this will allow a drop of any file, on Chrome and Safari it will only cancel the dragover/enter events where the file is actually of text/csv type) However since the dropzone will cancel the dragovers if any file is of type CSV you need
-    to check the type on drop anyway.
+    to check the type on drop anyway incase there was more than one file in the drag.
     
 5. <code>draggable</code> function to ease working with drag sources and provide custom ghost elements even on Internet Explorer.
   ```javascript
