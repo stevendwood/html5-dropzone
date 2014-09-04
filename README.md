@@ -50,7 +50,7 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
   ```javascript
     onDragStart: function(event) {
       // this now works on IE
-    event.dataTransfer.setData("text/x-example", "foo");
+      event.dataTransfer.setData("text/x-example", "foo");
     }
     ```
 3. Reliably read the dropEffect on source elements at the dragend using getDropEffect(). e.g. if you haven't tried to do this :
@@ -68,7 +68,7 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
   function dragEndHandler(event) {
       // following a successful drop...
       event.dataTransfer.dropEffect; // "move" on all browsers except IE which reports "none"
-        event.dataTransfer.getDropEffect(); // "move" on all browsers
+      event.dataTransfer.getDropEffect(); // "move" on all browsers
   }
     ```
 4. Easily accept files*
@@ -90,7 +90,7 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
             .setData("text/html", "Some <b>HTML</b> text")
             .effectAllowed("copy")
             .ghost(function() { 
-              var p = document.createElement("p");
+                var p = document.createElement("p");
                 p.innerHTML = "I'm a custom ghost";
                 p.classList.add("my-custom-ghost");
                 return p;
@@ -265,7 +265,7 @@ function dragOverHandler(event) {
 }
 
 function dragEndHandler(event) {
-  // following a successful drop...
+    // following a successful drop...
     event.dataTransfer.dropEffect; // "move" on all browsers
 }
 
@@ -286,7 +286,7 @@ function dragOverHandler(event) {
 }
 
 function dragEndHandler(event) {
-  // following a successful drop...
+    // following a successful drop...
     event.dataTransfer.dropEffect; // "move" on all browsers except IE which reports "none"
 }
 
@@ -295,7 +295,7 @@ Then the dropEffect is reported as "none" on IE, but is correctly reported on th
 
 ```javascript
 function dragEndHandler(event) {
-  // following a successful drop...with effectAllowed set to copyMove
+    // following a successful drop...with effectAllowed set to copyMove
     event.dataTransfer.dropEffect; // "move" on all browsers except IE which reports "none"
     event.dataTransfer.getDropEffect(); // "move" on all browsers.
 }
@@ -388,11 +388,11 @@ Now we can setup a 2nd dragsource and dropzone.  The 2nd dragsource is an apple,
 <script>
 
   function startDragPaper(e) {
-    e.dataTransfer.setData("text/x-paper", "put whatever you like in here");
+     e.dataTransfer.setData("text/x-paper", "put whatever you like in here");
   }
 
   function startDragApple(e) {
-    e.dataTransfer.setData("text/x-apple", "put whatever you like in here");
+     e.dataTransfer.setData("text/x-apple", "put whatever you like in here");
   }
         
   // drop handlers not shown
@@ -451,34 +451,34 @@ The ghost function takes as an argument either a DOM node or a function that pro
 ```javascript
 var listItems = [].slice.call(document.querySelectorAll("li"), 0);
 
-    listItems.forEach(function(li) {
+listItems.forEach(function(li) {
 
-      li.addEventListener("click", function() {
+    li.addEventListener("click", function() {
         li.classList.toggle("selected");
-      });
+    });
 
-      
-      draggable(li)
+
+    draggable(li)
         .setData("fruits", function() {
-          return [].map.call(document.querySelectorAll(".fruits li.selected"), function(e) { 
-            return e.innerHTML; 
-          });
+            return [].map.call(document.querySelectorAll(".fruits li.selected"), function(e) {
+                return e.innerHTML;
+            });
         })
         .ghost(function() {
-          var dragImg = document.createElement("ul");
-          [].forEach.call(document.querySelectorAll(".fruits li.selected"), function(li) {
-            dragImg.appendChild(li.cloneNode(true));
-          });
+            var dragImg = document.createElement("ul");
+            [].forEach.call(document.querySelectorAll(".fruits li.selected"), function(li) {
+                dragImg.appendChild(li.cloneNode(true));
+            });
 
-          return dragImg;
+            return dragImg;
         });
-      });
+});
 
 
-      document.getElementById("dropZone")
-        .addEventListener("drop", function(ev) { 
-          this.innerHTML = ev.dataTransfer.getData("fruits");
-        });
+document.getElementById("dropZone")
+    .addEventListener("drop", function(ev) {
+        this.innerHTML = ev.dataTransfer.getData("fruits");
+    });
 
 ```
 
@@ -505,9 +505,9 @@ If you want to use the browsers native dropEffect property reliably to do someth
    function dragStartHandler(event) {
       if (event.target instanceof HTMLLIElement) {
 
-       event.dataTransfer.setData("text/x-my-type", event.target.dataset.value);
-     event.dataTransfer.effectAllowed = 'copyMove'; // only allow copies or moves
-    } 
+         event.dataTransfer.setData("text/x-my-type", event.target.dataset.value);
+         event.dataTransfer.effectAllowed = 'copyMove'; // only allow copies or moves
+      } 
     }
 
   function dragEndHandler(event) {
@@ -516,9 +516,8 @@ If you want to use the browsers native dropEffect property reliably to do someth
 
     if (dropEffect === "move") {
          event.target.parentElement.removeChild(event.target);
-      }
-
     }
+  }
 </script>
 
 ```
