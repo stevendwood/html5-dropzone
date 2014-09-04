@@ -12,24 +12,23 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
-
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [Features](#features)
 - [Usage](#usage)
 - [Why do i need a library for native drag and drop ?](#why-do-i-need-a-library-for-native-drag-and-drop-)
 - [Using ``dropzone``](#using-dropzone)
-   - [Setting up a dropzone](#setting-up-a-dropzone)
-- [Styling the dropzone](#styling-the-dropzone)
-- [Multiple dropzones](#multiple-dropzones)
+  - [Setting up a dropzone](#setting-up-a-dropzone)
+  - [Styling the dropzone](#styling-the-dropzone)
+  - [Multiple dropzones](#multiple-dropzones)
 - [Drag sources](#drag-sources)
   - [Using ``draggable()``](#using-draggable)
     - [Basic use](#basic-use)
       - [<code>setData()</code>](#codesetdatacode)
       - [<code>effectAllowed()</code>](#codeeffectallowedcode)
     - [Customising the drag image](#customising-the-drag-image)
-    - [<code>ghost()</code>](#codeghostcode)
-  - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
+      - [<code>ghost()</code>](#codeghostcode)
+    - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -326,7 +325,7 @@ This example will make the element accept any drag that contains data text/plain
 
 
 
-#### Setting up a dropzone
+### Setting up a dropzone
 
 This simple example allows the user to drag the element with id "paper" and drop it on the div with id "trashcan".  Using this library (and the dropzone attribute), there is no need to cancel the dragenter and dragover events and provide styling in the dragenter/dragleave events.
 
@@ -445,7 +444,7 @@ Equivalent to setting the DataTransfer.effectAllowed property, but saves you hav
 
 One of the major holes of the IE implementation is the inability to provide a custom drag image.  The spec actually allows you to use a DOM element as the custom drag image, the trick being that it has to be visible.  To provide a custom drag image use the "ghost" function.  e.g consider a multi-select list.  If the user selects more than one thing, then we need to be able to indicate in the drag that more than one thing is being dragged.  In this example we provide a custom ghost image that addes into a UL a clone of all the list items having the "selected" class.
 
-####<code>ghost()</code>
+#####<code>ghost()</code>
 
 [Custom drag image demo](http://stevendwood.github.io/examples/custom-drag-image.html)
 
@@ -490,7 +489,7 @@ This produces the following :
 
 [Custom drag image demo](http://stevendwood.github.io/examples/multi-select.html)
 
-###<code>event.getDropEffect()</code>
+####<code>event.getDropEffect()</code>
 If you want to use the browsers native dropEffect property reliably to do something to the source element based on dropEffect - then you must allow only one effectAllowed copy, move or link if you do not set it it will become "copy".  Otherwise you should use the getDropEvent function in the dragend handler which reliably works in IE for compund values of the effectAllowed property.
 
 ```html

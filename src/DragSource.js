@@ -1,22 +1,22 @@
- module.exports = (function() {
-
+module.exports = (function() {
+    "use strict";
 
     var setDragImage,
         DataTransfer = (window.DataTransfer || window.Clipboard);
 
     if (DataTransfer) {
-        setDragImage = (typeof DataTransfer.prototype.setDragImage === "function"); 
+        setDragImage = (typeof DataTransfer.prototype.setDragImage === "function");
     }
 
     function encodeItems(dragStartEvent) {
         // Stores the supplied data in the data transfer object
-        var formats =  Object.getOwnPropertyNames(this.items);
-       
+        var formats = Object.getOwnPropertyNames(this.items);
+
         formats.forEach(function(format) {
-          var value;
+            var value;
             if (this.items.hasOwnProperty(format)) {
                 value = this.items[format];
-                if (typeof value === 'function') {
+                if (typeof value === "function") {
                     value = value(this.element);
                 }
 
@@ -31,7 +31,7 @@
             x, y,
             rect = this.element.getBoundingClientRect();
 
-        if (typeof this.ghostElementOrFunction === 'function') {
+        if (typeof this.ghostElementOrFunction === "function") {
             dragImage = this.ghostElementOrFunction();
         } else {
             dragImage = this.ghostElementOrFunction;
@@ -91,14 +91,14 @@
             element.addEventListener("dragstart", function(ev) {
                 if (this.effectAllowed) {
                     if (typeof this.effectAllowed === "function") {
-                        ev.dataTransfer.effectAllowed = this.effectAllowed(); 
+                        ev.dataTransfer.effectAllowed = this.effectAllowed();
                     } else {
-                        ev.dataTransfer.effectAllowed = this.effectAllowed;    
+                        ev.dataTransfer.effectAllowed = this.effectAllowed;
                     }
                 }
             }.bind(this));
         } else {
-            throw "Invalid element or selector specified as dragsource "+element;
+            throw "Invalid element or selector specified as dragsource " + element;
         }
     };
 
@@ -142,4 +142,4 @@
     };
 
     return DragSource;
-} ());
+}());
