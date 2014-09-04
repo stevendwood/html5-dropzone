@@ -23,9 +23,8 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
   - [Multiple dropzones](#multiple-dropzones)
 - [Drag sources](#drag-sources)
   - [Using ``draggable()``](#using-draggable)
-    - [Basic use](#basic-use)
-      - [<code>setData()</code>](#codesetdatacode)
-      - [<code>effectAllowed()</code>](#codeeffectallowedcode)
+    - [<code>setData()</code>](#codesetdatacode)
+    - [<code>effectAllowed()</code>](#codeeffectallowedcode)
     - [Customising the drag image](#customising-the-drag-image)
       - [<code>ghost()</code>](#codeghostcode)
     - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
@@ -410,8 +409,6 @@ Depending on what you want to do, you don't have to use this function at all, ho
 
 The draggable function lets you specify nodes that can be dragged, what gets put into the data transfer, what the allowed effects are and a way to customise the drag image.  
 
-#### Basic use
-
 ```html
 <div id="draggable"></div>
 <script>
@@ -434,10 +431,10 @@ document.getElementById("draggable")
 ```
 The above sample will not work cross browser without this library but it will once you use it so you don't have to use draggable for the above if you don't want to.  One other thing is that the value you provide for a type can be a string value or a function that produces a string.  if it's a function, it gets called when the drag starts.
 
-##### <code>setData()</code>
+#### <code>setData()</code>
 Equivalent to the DataTransfer.setData function, but saves you having to implement dragstart.  The 2nd param can be a string or a function that produces a string, gets called on drag start.
 
-##### <code>effectAllowed()</code>
+#### <code>effectAllowed()</code>
 Equivalent to setting the DataTransfer.effectAllowed property, but saves you having to implement dragstart.  The 2nd param can be a string or a function that produces a string, gets called on drag start.
 
 #### Customising the drag image
