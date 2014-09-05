@@ -19,7 +19,11 @@
 
 			li.placeholder {
 				background-color: white;
-				border: 1px dashed #ccc;
+				border: 1px dashed #990000;
+			}
+
+			.hidden {
+				display: none;
 			}
 			
 		</style>
@@ -48,6 +52,48 @@
 
 		// the placeholder
 		placeholder.classList.add("placeholder");
+
+		function onDragStart(ev) {
+			// remember the current li being dragged
+			beingDragged = this;
+			// but don't replace it immediately otherwise we'll get no
+			// ghost...
+			setTimeout(function() {
+				this.parentElement.insertBefore(placeholder, this);
+				// hide the item being dragged, 
+				this.classList.add("hidden");
+			}.bind(this));
+		}
+
+		function onDragEnd(ev) {
+			// on dragend, figure out if the drop was successful
+			var dropEffect = ev.dataTransfer.getDropEffect();
+
+			if (dropEffect === "move") {
+				placeholder.parentElement.replaceChild(beingDragged, placeholder);
+			} else {
+				placeholder.parentElement.removeChild(placeholder);
+			}
+
+			beingDragged.classList.remove("hidden"); // reset the display		
+		}
+
+		function onDragEnter(ev) {
+			// position the placeholder...
+			var nextSibling = ev.target.nextElementSibling;
+
+			if (nextSibling === beingDragged) {
+				nextSibling = nextSibling.nextElementSibling;
+			}
+
+			if (nextSibling === placeholder) {
+				ev.target.parentElement.insertBefore(placeholder, ev.target);
+			} else if (nextSibling) {
+				ev.target.parentElement.insertBefore(placeholder, nextSibling);
+			} else {
+				ev.target.parentElement.appendChild(placeholder);
+			}
+		}
 		
 		[].forEach.call(document.querySelectorAll("li"), function(li) {
 			// make each li draggable with an effectAllowed of move
@@ -55,47 +101,9 @@
 				.setData("text/x-fruit", li.innerHTML)
 				.effectAllowed("move");
 
-			li.addEventListener("dragstart", function(ev) {
-				// remember the current li being dragged
-				beingDragged = this;
-				// but don't replace it immediately otherwise we'll get no
-				// ghost...
-				setTimeout(function() {
-					this.parentElement.insertBefore(placeholder, this);
-					// hide the item being dragged, 
-					this.style.display = "none";
-				}.bind(this));
-			});
-
-			li.addEventListener("dragend", function(ev) {
-				// on dragend, figure out if the drop was successful
-				var dropEffect = ev.dataTransfer.getDropEffect();
-
-				if (dropEffect === "move") {
-					placeholder.parentElement.replaceChild(beingDragged, placeholder);
-				} else {
-					placeholder.parentElement.removeChild(placeholder);
-				}
-
-				beingDragged.style.display = "block"; // reset the display
-			});
-
-			li.addEventListener("dragenter", function(ev) {
-				// position the placeholder...
-				var nextSibling = ev.target.nextSibling;
-
-				while(nextSibling && nextSibling.nodeType != 1) {
-    				nextSibling = nextSibling.nextSibling
-				}
-
-				if (nextSibling === placeholder) {
-					ev.target.parentElement.insertBefore(placeholder, ev.target);
-				} else if (nextSibling) {
-					ev.target.parentElement.insertBefore(placeholder, nextSibling);
-				} else {
-					ev.target.parentElement.appendChild(placeholder);
-				}
-			});
+			li.addEventListener("dragstart", onDragStart);
+			li.addEventListener("dragend", onDragEnd);
+			li.addEventListener("dragenter", onDragEnter);
 		});
 
 		</script>
