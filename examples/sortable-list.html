@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Simple Sort</title>
+		<style>
+			ul {
+			    width: 200px;
+			    padding: 2px;
+			}
+
+			li {
+			   background-color: #FFFCCC;
+			   list-style: none;
+			   margin-bottom: 5px;
+			   border: 1px solid #ccc;
+			   padding: 3px; 
+			   height: 20px;
+			}
+
+			li.placeholder {
+				background-color: white;
+				border: 1px dashed #ccc;
+			}
+			
+		</style>
+		
+	</head>
+	<body>
+
+		<ul dropzone="move s:text/x-fruit" class="fruits">
+		    <li>Item 1</li>
+		    <li>Item 2</li>
+		    <li>Item 3</li>
+		    <li>Item 4</li>
+		    <li>Item 5</li>
+		    <li>Item 6</li>
+		    <li>Item 7</li>
+		    <li>Item 8</li>
+		    <li>Item 9</li>
+		    <li>Item 10</li>
+		</ul>
+
+		<script src="../dist/dropzone.js"></script>
+		<script>
+
+		var placeholder = document.createElement("li"),
+			beingDragged;
+
+		// the placeholder
+		placeholder.classList.add("placeholder");
+		
+		[].forEach.call(document.querySelectorAll("li"), function(li) {
+			// make each li draggable with an effectAllowed of move
+			draggable(li)
+				.setData("text/x-fruit", li.innerHTML)
+				.effectAllowed("move");
+
+			li.addEventListener("dragstart", function(ev) {
+				// remember the current li being dragged
+				beingDragged = this;
+				// but don't replace it immediately otherwise we'll get no
+				// ghost...
+				setTimeout(function() {
+					this.parentElement.insertBefore(placeholder, this);
+					// hide the item being dragged, 
+					this.style.display = "none";
+				}.bind(this));
+			});
+
+			li.addEventListener("dragend", function(ev) {
+				// on dragend, figure out if the drop was successful
+				var dropEffect = ev.dataTransfer.getDropEffect();
+
+				if (dropEffect === "move") {
+					placeholder.parentElement.replaceChild(beingDragged, placeholder);
+				} else {
+					placeholder.parentElement.removeChild(placeholder);
+				}
+
+				beingDragged.style.display = "block"; // reset the display
+			});
+
+			li.addEventListener("dragenter", function(ev) {
+				// position the placeholder...
+				var nextSibling = ev.target.nextSibling;
+
+				while(nextSibling && nextSibling.nodeType != 1) {
+    				nextSibling = nextSibling.nextSibling
+				}
+
+				if (nextSibling === placeholder) {
+					ev.target.parentElement.insertBefore(placeholder, ev.target);
+				} else if (nextSibling) {
+					ev.target.parentElement.insertBefore(placeholder, nextSibling);
+				} else {
+					ev.target.parentElement.appendChild(placeholder);
+				}
+			});
+		});
+
+		</script>
+	</body>
+</html>

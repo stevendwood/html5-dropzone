@@ -168,7 +168,7 @@ module.exports = (function() {
             dragImage.addEventListener("dragstart", encodeItems.bind(this));
             dragImage.addEventListener("dragstart", function(ev) {
                this.dragStartListeners.forEach(function(l) { l(ev); });
-            });
+            }.bind(this));
             dragImage.addEventListener("dragstart", applyEffectAllowed.bind(this));
             dragImage.dragDrop();
         }

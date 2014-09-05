@@ -85,7 +85,7 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
 5. <code>draggable</code> function to ease working with drag sources and provide custom ghost elements even on Internet Explorer.
   ```javascript
     // make the element draggable, with two content types, 
-    // it can only be copied and that it has a custom ghost element function
+    // it can only be copied and it has a custom ghost element function
     draggable("#dragMe")
           .setData("text/plain", "Some plain text")
           .setData("text/html", "Some <b>HTML</b> text")
@@ -99,8 +99,7 @@ A small JavaScript library that provides a usable implementation of the HTML5 [d
   ```
 
 
-
-Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a valid drop effect is selected.  The library tries to implement as many of the event handlers for you as possible, so all you have to do is implement what happens on drop.
+Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a valid drop effect is selected. 
 
 Supports: IE10+, Chrome, Firefox, Safari
 
