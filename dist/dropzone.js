@@ -243,6 +243,7 @@ module.exports = (function() {
     var Operation = require("./Operation");
     var Kind = require("./Kind");
     var Type = require("./Type");
+    var isMac = window.navigator.platform.indexOf("Mac") !== -1;
 
     var DataTransfer = (window.DataTransfer || window.Clipboard),
         validDrop,
@@ -269,11 +270,20 @@ module.exports = (function() {
             effectAllowed,
             dataTransfer = dragEvent.dataTransfer;
 
-        // TODO: Mac
         if (dragEvent.altKey) {
-            effect = Operation.LINK;
+            if (!isMac) {
+                effect = Operation.LINK;
+            } else { 
+                effect = Operation.COPY;
+            }
         } else if (dragEvent.ctrlKey) {
-            effect = Operation.COPY;
+            if (!isMac) {
+                effect = Operation.COPY;
+            } else {
+                effect = Operation.LINK;
+            }
+        } else if (dragEvent.metaKey) {
+            effect = Operation.MOVE;
         } else {
             effect = this.operation;
         }
@@ -421,6 +431,10 @@ module.exports = (function() {
             }
         };
 
+        if (typeof element === "string") {
+            element = document.querySelector(element);
+        }
+        
         this.element = element;
         this.dragEnterClass = "drag-matches";
         if (typeof options === "object") {

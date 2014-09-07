@@ -57,8 +57,8 @@
 			        })
 			   		.on("dragend", function(e) {
 			        	var dt =  e.dataTransfer;
-			        	this.innerHTML += "<br/> Drop effect at source "+dt.getDropEffect();
-			        	this.innerHTML += "<br/> Drop effect at source (native) "+dt.dropEffect;
+			        	this.element.innerHTML += "<br/> Drop effect at source "+dt.getDropEffect();
+			        	this.element.innerHTML += "<br/> Drop effect at source (native) "+dt.dropEffect;
 			    	});
 			    
 			    function cancelAndShowDropEffect(effect, e) {
