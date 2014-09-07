@@ -26,7 +26,6 @@ module.exports = (function() {
             i, l,
             dragItems, // the DataTransferItems on some browsers, or the fake ones for IE
             dragTypes, // the types in the dataTransfer if items is not available
-            acceptsEntry, // current entry under consideration for a match
             effect,
             effectAllowed,
             dataTransfer = dragEvent.dataTransfer;
