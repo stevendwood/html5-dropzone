@@ -182,6 +182,10 @@ module.exports = (function() {
             }
         };
 
+        if (typeof element === "string") {
+            element = document.querySelector(element);
+        }
+        
         this.element = element;
         this.dragEnterClass = "drag-matches";
         if (typeof options === "object") {
