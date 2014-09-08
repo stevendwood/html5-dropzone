@@ -116,13 +116,15 @@ module.exports = (function() {
             }
         }
     }
-    
+
 
     function ghost(event) {
         var dragImage,
             style,
             x, y,
-            rect = this.element.getBoundingClientRect();
+            rect = this.element.getBoundingClientRect(),
+            scrollTop = (document.documentElement["scrollTop"] || document.body["scrollTop"]),
+            scrollLeft = (document.documentElement["scrollLeft"] || document.body["scrollLeft"]);
 
         if (typeof this.ghostElementOrFunction === "function") {
             dragImage = this.ghostElementOrFunction();
@@ -133,12 +135,15 @@ module.exports = (function() {
         x = event.pageX;
         y = event.pageY;
 
-        this.offsetX = x - rect.left;
-        this.offsetY = y - rect.top;
+
+
+    
+        this.offsetX = x - (rect.left + scrollLeft);
+        this.offsetY = y - (rect.top + scrollTop);
 
         style = dragImage.style;
-        style.top = rect.top + "px";
-        style.left = rect.left + "px";
+        style.top = rect.top +  scrollTop  +  "px";
+        style.left = rect.left + scrollLeft +"px";
         style.pointerEvents = "none";
         style.position = "absolute";
         style.margin = "0px";
@@ -265,7 +270,6 @@ module.exports = (function() {
             i, l,
             dragItems, // the DataTransferItems on some browsers, or the fake ones for IE
             dragTypes, // the types in the dataTransfer if items is not available
-            acceptsEntry, // current entry under consideration for a match
             effect,
             effectAllowed,
             dataTransfer = dragEvent.dataTransfer;
