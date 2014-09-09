@@ -42,7 +42,8 @@
                  DataTransfer.prototype.items = DataTransfer.prototype.items || [];
                  DataTransfer.prototype.items.push({
                      kind: Kind.STRING,
-                     type: type
+                     type: type,
+                     value: value
                  });
              }
          };
