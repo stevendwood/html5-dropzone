@@ -134,9 +134,6 @@ module.exports = (function() {
         x = event.pageX;
         y = event.pageY;
 
-
-
-    
         this.offsetX = x - (rect.left + scrollLeft);
         this.offsetY = y - (rect.top + scrollTop);
 
