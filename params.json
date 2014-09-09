@@ -1,0 +1,1 @@
+{"name":"Html5-dropzone","tagline":"","body":"### HTML5 [dropzone]\r\n\r\n```javascript\r\n<div dropzone=\"copy s:text/plain s:text/x-fruit\">\r\n```\r\n\r\n## Cross browser HTML5 drag and drop\r\n\r\n\r\n<script src=\"dist/dropzone.min.js\"></script>","google":"","note":"Don't delete this file! It's used internally to help with page regeneration."}
