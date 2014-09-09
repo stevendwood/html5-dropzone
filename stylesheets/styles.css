@@ -138,6 +138,30 @@ header ul:before {
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0, inset rgba(255, 255, 255, 0.7) 0 -1px 0;
   box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 0, inset rgba(255, 255, 255, 0.7) 0 -1px 0;
 }
+
+
+.sample li {
+  width: 250px;
+  border: 1px solid #ccc;
+  background-color: #FFFAAA;
+  margin-bottom: 10px;
+}
+
+.sample ol {
+  padding: 25px;
+}
+
+[dropzone] {
+  min-height: 20px;
+  width: 500px;
+  border: 1px solid #ADADAD;
+}
+
+[dropzone].drag-matches {
+  border: 1px solid green;
+  background-color: #CCFFCC;
+}
+
 header ul li {
   width: 79px;
   float: left;

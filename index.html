@@ -36,6 +36,67 @@
 <h2>
 <a name="cross-browser-html5-drag-and-drop" class="anchor" href="#cross-browser-html5-drag-and-drop"><span class="octicon octicon-link"></span></a>Cross browser HTML5 drag and drop</h2>
       </section>
+      <section>
+
+      In this example, drag and drop fruits betweem the two lists, use the platform keyboard modifiers to control whether elements are moved or copied between the lists.
+
+      <div class="sample">
+      <p>What fruits do you like?</p>
+      <ol ondragstart="dragStartHandler(event)" ondragend="dragEndHandler(event)">
+       <li draggable="true" data-value="fruit-apple">Apples</li>
+       <li draggable="true" data-value="fruit-orange">Oranges</li>
+       <li draggable="true" data-value="fruit-pear">Pears</li>
+      </ol>
+
+      <p>Drop your favorite fruits below, use ctrl on windows to control copy or move:</p>
+      <ol dropzone="move string:text/x-example" ondrop="dropHandler(event)" ondragend="dragEndHandler(event)" ondragstart="dragStartHandler(event)">
+      </ol>
+    </div>
+    <script>
+
+        var internalDNDType = 'text/x-example'; // set this to something specific to your site
+        function dragStartHandler(event) {
+          if (event.target instanceof HTMLLIElement) {
+              // use the element's data-value="" attribute as the value to be moving:
+              event.dataTransfer.setData(internalDNDType, event.target.dataset.value);
+              event.dataTransfer.effectAllowed = 'copyMove'; // only allow moves
+          } else {
+              event.preventDefault(); // don't allow selection to be dragged
+          }
+        }
+
+      function dragEndHandler(event) {
+          var dropEffect = event.dataTransfer.getDropEffect();
+
+          if (dropEffect === "move") {
+            event.target.parentElement.removeChild(event.target);
+          }
+      }
+
+      function dropHandler(event) {
+          var li = document.createElement('li'),
+              target = event.target,
+              data = event.dataTransfer.getData(internalDNDType);
+          if (data == 'fruit-apple') {
+              li.textContent = 'Apples';
+          } else if (data == 'fruit-orange') {
+              li.textContent = 'Oranges';
+          } else if (data == 'fruit-pear') {
+              li.textContent = 'Pears';
+          } else {
+              li.textContent = 'Unknown Fruit';
+          }
+          
+          if (target instanceof HTMLLIElement) {
+            target.parentElement.appendChild(li);
+          } else {
+            target.appendChild(li);
+          }
+        }
+    </script>
+
+      </section>
+
     </div>
     <footer>
       <p>Project maintained by <a href="https://github.com/stevendwood">stevendwood</a></p>
