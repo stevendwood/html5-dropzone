@@ -9,7 +9,7 @@
     		font-family: Arial;
     		width: 800px;
 			  margin: 5px auto;
-			  background-color: #f8f8f8;
+        font-size: 12px;
     	}
 
     	hgroup h1 {
@@ -23,16 +23,18 @@
     		padding: 2px;
         font-size: 12pt;
         border: none;
+        background-color: white;
     	}
 
     	hgroup h2 {
     		text-align: right;
 			  font-style: italic;
 			  margin-top: 5px;
+        color: #999900;
     	}
 
     	h1 pre {
-    		padding: 0px;
+    		padding: 3px;
     		margin: 0px;
     		float: left;
     	}
@@ -52,10 +54,6 @@
 
       .sample ol {
         padding: 25px;
-      }
-
-      .sample .hljs {
-        background-color: white;
       }
 
       .sample1 [dropzone] {
@@ -116,8 +114,7 @@
   &lt;li draggable=&quot;true&quot; data-value=&quot;fruit-apple&quot;&gt;Apples&lt;/li&gt;
   &lt;li draggable=&quot;true&quot; data-value=&quot;fruit-orange&quot;&gt;Oranges&lt;/li&gt;
   &lt;li draggable=&quot;true&quot; data-value=&quot;fruit-pear&quot;&gt;Pears&lt;/li&gt;
-&lt;/ul&gt; 
- </code></pre>
+&lt;/ul&gt;</code></pre>
  <p>
     So in dragstart - we provide some data keyed by the example type "text/x-example", we also specify that the user is allowed to move or copy the list items.  We do the latter by specifying the <a href="https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer">effectAllowed</a>. 
  </p>
