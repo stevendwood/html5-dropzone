@@ -1,15 +1,15 @@
 <!doctype html>
 <html>
   <head>
-   	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/github.min.css">
+   	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/foundation.min.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <style>
     	body {
     		font-family: Arial;
-    		width: 800px;
+    		width: 820px;
 			  margin: 5px auto;
-        font-size: 12px;
+        font-size: 15px;
     	}
 
     	hgroup h1 {
@@ -18,6 +18,11 @@
   			padding-bottom: 2px;
   			margin-bottom: 2px;
     	}
+
+      p {
+        color: #555;
+        line-height: 1.5;
+      }
 
     	hgroup h1 .hljs {
     		padding: 2px;
@@ -69,6 +74,7 @@
 
       .hljs {
         border: 1px solid #ccc;
+        border-radius: 5px;
       }
 
     </style>
@@ -93,9 +99,11 @@
 
     <h2>Basic example</h2>
     <section class="sample sample1">
-      In this example, drag and drop fruits betweem the two lists. You can use the platform keyboard modifiers to control whether elements are moved or copied between the lists, for example ctrl on windows will change from move to copy.
+      <p>
+      This sample is based on the example from the HTML5 <a href="http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html#introduction-7">spec</a>.
+      You can drag and drop fruits betweem the two lists. You can also use the platform keyboard modifiers to control whether elements are moved or copied between the lists, for example ctrl on windows will change from move to copy.
+      </p>
 
-      <p>What fruits do you like?</p>
       <ul ondragstart="dragStartHandler(event)" ondragend="dragEndHandler(event)">
        <li draggable="true" data-value="fruit-apple">Apples</li>
        <li draggable="true" data-value="fruit-orange">Oranges</li>
@@ -124,9 +132,7 @@ function dragStartHandler(event) {
     // use the element's data-value="" attribute as the value to be moving:
     event.dataTransfer.setData(internalDNDType, event.target.dataset.value);
     event.dataTransfer.effectAllowed = 'copyMove'; // only allow the data to be copied or moved
-  } else {
-    event.preventDefault(); // don't allow selection to be dragged
-  }
+  } 
 }</code></pre>
  <p>
    Now that the dragstart is set up, we need to specify a drop target.  Typically you would need to do this by adding a bunch of event handlers to the node that can accept the drop, and cancelling the events if you decide that the element can take the drop given the data currently being dragged.  With the <code>dropzone</code> attribute you can skip all of that.
@@ -169,7 +175,8 @@ function dragEndHandler(event) {
   }
 } </code></pre>
 
-
+<p>
+</p>
 
     </section>
     <script>
@@ -180,8 +187,6 @@ function dragEndHandler(event) {
               // use the element's data-value="" attribute as the value to be moving:
               event.dataTransfer.setData(internalDNDType, event.target.dataset.value);
               event.dataTransfer.effectAllowed = 'copyMove'; // only allow moves
-          } else {
-              event.preventDefault(); // don't allow selection to be dragged
           }
         }
 
