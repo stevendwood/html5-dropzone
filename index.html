@@ -94,7 +94,7 @@
   	
   	<h1>Introduction</h1>
   	<p>
-  		A small JavaScript library that provides an implementation of the proposed HTML5 dropzone attribute, and eases development of drag and drop the HTML5 way.
+  		A small JavaScript library that provides an implementation of the proposed HTML5 dropzone attribute, and eases development of drag and drop the HTML5 way.  Supports Chrome, Firefox, Safari and IE 10+.
   	</p>
 
     <h2>Basic example</h2>
@@ -124,7 +124,7 @@
   &lt;li draggable=&quot;true&quot; data-value=&quot;fruit-pear&quot;&gt;Pears&lt;/li&gt;
 &lt;/ul&gt;</code></pre>
  <p>
-    So in dragstart - we provide some data keyed by the example type "text/x-example", we also specify that the user is allowed to move or copy the list items.  We do the latter by specifying the <a href="https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer">effectAllowed</a>. 
+    So in dragstart - we provide some data keyed by the example type "text/x-example", we also specify that the user is allowed to move or copy the list items.  We do the latter by specifying the <a href="https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer">effectAllowed</a>.  Note that if you tried to run this sample <i>without</i> the HTML5 dropzone library, it would not work on Internet Explorer at all.  
  </p>
  <pre><code class="javascript">var internalDNDType = 'text/x-example'; 
 function dragStartHandler(event) {
