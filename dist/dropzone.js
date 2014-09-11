@@ -259,6 +259,13 @@ module.exports = (function() {
         }
     };
 
+    function removeAllDragClasses(element, dragEnterClass) {
+        element.classList.remove(Operation.COPY);
+        element.classList.remove(Operation.MOVE);
+        element.classList.remove(Operation.LINK);
+        element.classList.remove(dragEnterClass);
+    }
+
     function acceptsDrop(dragEvent) {
 
         // Figure out whether a drop zone (this) accepts a drop of the
@@ -297,6 +304,7 @@ module.exports = (function() {
                 // Chrome and FF will not let us get this far, as they natively implement
                 // the logic above, TODO: perhaps we should allow dropzones to indicate they
                 // do not accept anything other than the operation ??
+                removeAllDragClasses(this.element, this.dragEnterClass);
                 return false;
             }
         } catch (e) {
@@ -366,6 +374,12 @@ module.exports = (function() {
                 this.element.classList.remove(Operation.LINK);
                 this.element.classList.add(effect);
             }
+
+             if (!this.element.classList.contains(this.dragEnterClass)) {
+                this.element.classList.add(this.dragEnterClass);
+             }
+        } else {
+            removeAllDragClasses(this.element, this.dragEnterClass);
         }
 
         return accepts;
@@ -459,10 +473,7 @@ module.exports = (function() {
 
         tidyUpClassesAndResetCounter = function() {
             enterLeaveCount = 0;
-            this.element.classList.remove(this.dragEnterClass);
-            this.element.classList.remove(Operation.COPY);
-            this.element.classList.remove(Operation.MOVE);
-            this.element.classList.remove(Operation.LINK);
+            removeAllDragClasses(this.element, this.dragEnterClass);
             setTimeout(function() {
                 // give a chance for the _dropEffect to be used
                 validDrop = false;
