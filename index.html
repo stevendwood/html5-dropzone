@@ -288,7 +288,9 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
     <h2>Customising the drag ghost</h2>
     <section class="sample sample2">
     <p>
-    Let's extend the example above so that users can select more than one fruit at a time.  As you can imagine it's not that hard to get the drop and dragend functions to handle this.
+    Let's extend the example above so that users can select more than one fruit at a time.  
+
+    <b> Click on a fruit to select it. </b>
     </p>
       <ul>
        <li draggable="true" data-value="fruit-apple">Apples</li>
@@ -305,21 +307,38 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
        [].forEach.call(document.querySelectorAll(".sample2 li"), function(li) {
           draggable(li)
             .effectAllowed("copyMove")
-            .setData("text/x-example", function() { return this.element.dataset.value; })
+            .setData("text/x-example", function() { 
+               var fruits = [];
+               this.element.classList.add("selected");
+
+               [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+                  fruits.push(item.dataset.value);
+               });
+
+               return fruits.join(",");
+            })
             .ghost(function() {
               var g = document.createElement("div"),
                  ul = document.createElement("ul");
 
-              g.appendChild(ul);
-              g.classList.add("sample");
+                 g.appendChild(ul);
+                 ul.style.padding = "0px";
+                 g.classList.add("sample");
 
-              [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
-                ul.appendChild(item.cloneNode(true));
-              });
+                 [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+                   ul.appendChild(item.cloneNode(true));
+                 });
 
                 return g;
             })
-            .on("dragend", dragEndHandler);
+            .on("dragend", function() {
+                var dropEffect = event.dataTransfer.getDropEffect();
+                if (dropEffect === "move") {
+                   [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+                     item.parentElement.removeChild(item);
+                   });
+                }
+            });
 
             li.addEventListener("click", function() {
               if (li.classList.contains("selected")) {
@@ -330,9 +349,36 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
             })
         });
 
+       function dropHandler2(event) {
+
+          var data = event.dataTransfer.getData(internalDNDType),
+              fruits = data.split(",");
+
+          fruits.forEach(function(data) {
+          var li = document.createElement('li'),
+              target = event.target;
+
+            if (data == 'fruit-apple') {
+                li.textContent = 'Apples';
+            } else if (data == 'fruit-orange') {
+                li.textContent = 'Oranges';
+            } else if (data == 'fruit-pear') {
+                li.textContent = 'Pears';
+            } else {
+                li.textContent = 'Unknown Fruit';
+            }
+            
+            if (target instanceof HTMLLIElement) {
+              target.parentElement.appendChild(li);
+            } else {
+              target.appendChild(li);
+            }
+          });
+        }
 
 
-       document.querySelector(".sample2 [dropzone]").addEventListener("drop", dropHandler);
+
+       document.querySelector(".sample2 [dropzone]").addEventListener("drop", dropHandler2);
        dropzone(document.querySelector(".sample2 [dropzone]"));
        </script>
 
