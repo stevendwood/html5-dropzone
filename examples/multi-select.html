@@ -5,7 +5,7 @@
 		<style>
 			ul {
 			    width: 200px;
-			    padding: 2px;
+			    padding: 20px;
 			}
 
 			.dragImage {
@@ -72,6 +72,7 @@
 				})
 				.ghost(function() {
 					var dragImg = document.createElement("ul");
+					dragImg.style.padding = "0px";
 					[].forEach.call(document.querySelectorAll(".fruits li.selected"), function(li) {
 						dragImg.appendChild(li.cloneNode(true));
 					});
