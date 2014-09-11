@@ -5,6 +5,7 @@
 
 A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, eases implementation of HTML5 drag and drop apps  and gets drag and drop to work in the intended HTML 5 style cross browser.  
 
+[Project page](http://stevendwood.github.io/html5-dropzone/)
 
 [Multiple dropzone demo](http://stevendwood.github.io/html5-dropzone/examples/cards.html) - This demo is based on a JQuery drag and drop example and shows how you can have different dropzones that can be fussy about what they accept even on IE.  
 
