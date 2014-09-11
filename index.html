@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-   	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/foundation.min.css">
+   	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/rainbow.min.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
     <style>
@@ -75,6 +75,7 @@
       .hljs {
         border: 1px solid #ccc;
         border-radius: 5px;
+        line-height: 1.5;
       }
 
     </style>
@@ -118,7 +119,7 @@
           To get this to work, 1st we need to setup a drag start handler to place some data into the DataTransfer object of the drag event, and we need a dragend handler which will fire when the user finishes dragging.  This is just for example, typically you might prefer not to declare event handlers in markup :)
       </p>
 
-       <pre><code class="html">&lt;ul ondragstart=&quot;dragStartHandler(event)&quot; ondragend=&quot;dragEndHandler(event)&quot;&gt; 
+       <pre><code class="html">&lt;ul ondragstart=&quot;dragStartHandler(event)&quot; ondragend=&quot;dragEndHandler(event)&quot;&gt;
   &lt;li draggable=&quot;true&quot; data-value=&quot;fruit-apple&quot;&gt;Apples&lt;/li&gt;
   &lt;li draggable=&quot;true&quot; data-value=&quot;fruit-orange&quot;&gt;Oranges&lt;/li&gt;
   &lt;li draggable=&quot;true&quot; data-value=&quot;fruit-pear&quot;&gt;Pears&lt;/li&gt;
@@ -146,9 +147,9 @@ function dragStartHandler(event) {
 
     <pre>
       <code class="javascript">function dropHandler(event) {
-  var li = document.createElement('li'),
-      target = event.target,
-      data = event.dataTransfer.getData(internalDNDType);
+var li = document.createElement('li'),
+    target = event.target,
+    data = event.dataTransfer.getData(internalDNDType);
 
   if (data == 'fruit-apple') {
     li.textContent = 'Apples';
@@ -159,7 +160,7 @@ function dragStartHandler(event) {
   } else {
     li.textContent = 'Unknown Fruit';
   }
-      
+        
   if (target instanceof HTMLLIElement) {
     target.parentElement.appendChild(li);
   } else {
@@ -168,17 +169,20 @@ function dragStartHandler(event) {
 }
 
 function dragEndHandler(event) {
+  // use the custom getDropEffect() method rather than the
+  // native dropEffect property to get the correct value on IE
   var dropEffect = event.dataTransfer.getDropEffect();
 
   if (dropEffect === "move") {
     event.target.parentElement.removeChild(event.target);
   }
-} </code></pre>
+}</code></pre>
 
 <p>
 </p>
 
     </section>
+     <script src="dist/dropzone.js"></script>
     <script>
 
         var internalDNDType = 'text/x-example'; // set this to something specific to your site
@@ -187,6 +191,7 @@ function dragEndHandler(event) {
               // use the element's data-value="" attribute as the value to be moving:
               event.dataTransfer.setData(internalDNDType, event.target.dataset.value);
               event.dataTransfer.effectAllowed = 'copyMove'; // only allow moves
+
           }
         }
 
@@ -218,9 +223,20 @@ function dragEndHandler(event) {
             target.appendChild(li);
           }
         }
+
+       /* [].forEach.call(document.querySelectorAll(".sample1 li"), function(li) {
+          draggable(li)
+            .effectAllowed("copyMove")
+            .setData("text/x-example", function(event) {
+              console.debug(this);
+                return this.element.dataset.value;
+            })
+            .on("dragend", dragEndHandler);
+        });*/
+
     </script>
 
   </div>
-   <script src="dist/dropzone.min.js"></script>
+  
   </body>
 </html>
