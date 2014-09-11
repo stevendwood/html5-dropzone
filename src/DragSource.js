@@ -110,6 +110,8 @@ module.exports = (function() {
         } else {
             throw "Invalid element or selector specified as dragsource " + element;
         }
+
+        this.dragStartListeners = [];
     };
 
     DragSource.prototype = {
@@ -143,7 +145,6 @@ module.exports = (function() {
         on: function(eventName, fn) {
             this.element.addEventListener(eventName, fn.bind(this));
             if (eventName === "dragstart" && !setDragImage) {
-                this.dragStartListeners = this.dragStartListeners || [];
                 this.dragStartListeners.push(fn.bind(this));
             }
             return this;
