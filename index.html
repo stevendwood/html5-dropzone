@@ -55,6 +55,7 @@
       .sample ul {
         list-style: none;
         padding: 10px;
+        margin: 0px;
       }
 
       .sample li {
@@ -311,7 +312,6 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
 
               g.appendChild(ul);
               g.classList.add("sample");
-              
 
               [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
                 ul.appendChild(item.cloneNode(true));
