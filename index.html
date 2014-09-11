@@ -46,7 +46,7 @@
     	}
 
 
-      h3 {
+      #main h2 {
         padding-bottom: 5px;
         border-bottom: 1px solid #ccc;
 
@@ -63,13 +63,20 @@
         background-color: #FFFAAA;
         margin-bottom: 10px;
         padding: 5px;
+        transition-property: background-color;
+        transition-duration: .5s;
+      }
+
+      .sample li.selected {
+        background-color: yellow;
+        border: 1px solid green;
       }
 
       .sample ol {
         padding: 25px;
       }
 
-      .sample1 [dropzone] {
+      .sample [dropzone] {
         min-height: 20px;
         width: 500px;
         border-width: 5px;
@@ -106,18 +113,17 @@
   	
   	<h1>Introduction</h1>
   	<p>
-  		A small JavaScript library that provides an implementation of the proposed HTML5 dropzone attribute, and eases development of drag and drop the HTML5 way.  Supports Chrome, Firefox, Safari and IE 10+.
+  		A small JavaScript library that provides an implementation of the proposed HTML5 dropzone attribute, and eases development of drag and drop the HTML5 way.  Supports Chrome, Firefox, Safari and IE 10+.  
   	</p>
 
-    <h2>Basic example</h2>
+    <h1>Basic example</h1>
     <section class="sample sample1">
       <p>
       This sample is based on the example from the HTML5 <a href="http://www.w3.org/TR/2011/WD-html5-20110525/dnd.html#introduction-7">spec</a>.
-      You can drag and drop fruits betweem the two lists. You can also use the platform keyboard modifiers to control whether elements are moved or copied between the lists, for example ctrl on windows will change from move to copy.
+      You can drag and drop fruits betweem the two lists. You can also use the platform keyboard modifiers to control whether elements are moved or copied between the lists, for example ctrl on windows will change from move to copy.  Note that if you hit the link modifier (Alt on Windows) the drop is not allowed and the css classes are removed.
       </p>
 
-      <ul >
-
+      <ul>
        <li draggable="true" data-value="fruit-apple">Apples</li>
        <li draggable="true" data-value="fruit-orange">Oranges</li>
        <li draggable="true" data-value="fruit-pear">Pears</li>
@@ -127,9 +133,8 @@
 
       <ul dropzone="move string:text/x-example">
       </ul>
-      <h3>Implement ondragstart</h3>
+      <h2>Implement ondragstart</h2>
 
-    
       <p> 
           To get this to work, 1st we need to setup a drag start handler to place some data into the DataTransfer object of the drag event, and we need a dragend handler which will fire when the user finishes dragging.  This is just for example, typically you might prefer not to declare event handlers in markup :)
       </p>
@@ -152,7 +157,7 @@ function dragStartHandler(event) {
     event.dataTransfer.effectAllowed = 'copyMove'; 
   } 
 }</code></pre>
- <h3>Define a [dropzone]</h3>
+ <h2>Define a [dropzone]</h2>
  <p>
    Now that the dragstart is set up, we need to specify a drop target.  Typically you would need to do this by adding a bunch of event handlers to the node that can accept the drop, and cancelling the events if you decide that the element can take the drop given the data currently being dragged.  With the <code>dropzone</code> attribute you can skip all of that.
  </p>
@@ -164,7 +169,7 @@ function dragStartHandler(event) {
  </p>
 
 
- <h3>Handle drop and dragend</h3>
+ <h2>Handle drop and dragend</h2>
  <p>
   In the drop handler we examine the drag data item which is retrieved by type, and build a new list item based on it.  On dragend we need to check whether the user specified a move or a copy, and remove the element from the source if appropriate.
  </p>
@@ -203,7 +208,7 @@ function dragEndHandler(event) {
 }</code></pre>
 
 
-   <h3 id="draggable">Using draggable</h3>
+   <h2 id="draggable">Using draggable</h2>
    <p>
    We can use the draggable function in place of the dragstart listener, this allows you to specify the effectAllowed and
    as many data types as you like, we can also hook up the dragend handler instead of defining the event handler in the markup.
@@ -218,6 +223,7 @@ function dragEndHandler(event) {
 document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandler);</code></pre>
 
 <p>
+  The effectAllowed function is called at drag start, you can supply either a string or a function that produces a string. The same is true of the setData functions 2nd parameter.  Any function you supply is bound to an object where this.element is the thing passed to the draggable function.
 </p>
 
 
@@ -277,6 +283,60 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
         document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandler);
 
     </script>
+
+    <h2>Customising the drag ghost</h2>
+    <section class="sample sample2">
+    <p>
+    Let's extend the example above so that users can select more than one fruit at a time.  As you can imagine it's not that hard to get the drop and dragend functions to handle this.
+    </p>
+      <ul>
+       <li draggable="true" data-value="fruit-apple">Apples</li>
+       <li draggable="true" data-value="fruit-orange">Oranges</li>
+       <li draggable="true" data-value="fruit-pear">Pears</li>
+      </ul>
+
+      <p>Drop your favorite fruits below, use ctrl on windows to control copy or move:</p>
+
+      <ul dropzone="move string:text/x-example">
+      </ul>
+
+      <script>
+       [].forEach.call(document.querySelectorAll(".sample2 li"), function(li) {
+          draggable(li)
+            .effectAllowed("copyMove")
+            .setData("text/x-example", function() { return this.element.dataset.value; })
+            .ghost(function() {
+              var g = document.createElement("div"),
+                 ul = document.createElement("ul");
+
+              g.appendChild(ul);
+              g.classList.add("sample");
+              
+
+              [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+                ul.appendChild(item.cloneNode(true));
+              });
+
+                return g;
+            })
+            .on("dragend", dragEndHandler);
+
+            li.addEventListener("click", function() {
+              if (li.classList.contains("selected")) {
+                li.classList.remove("selected")
+              } else {
+                li.classList.add("selected")
+              }
+            })
+        });
+
+
+
+       document.querySelector(".sample2 [dropzone]").addEventListener("drop", dropHandler);
+       dropzone(document.querySelector(".sample2 [dropzone]"));
+       </script>
+
+      </section>
 
   </div>
   
