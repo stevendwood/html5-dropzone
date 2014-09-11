@@ -17,7 +17,7 @@ module.exports = (function() {
             if (this.items.hasOwnProperty(format)) {
                 value = this.items[format];
                 if (typeof value === "function") {
-                    value = value(this.element);
+                    value = value.call(this, this.element);
                 }
 
                 dragStartEvent.dataTransfer.setData(format, value);

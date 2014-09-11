@@ -98,7 +98,7 @@ module.exports = (function() {
             if (this.items.hasOwnProperty(format)) {
                 value = this.items[format];
                 if (typeof value === "function") {
-                    value = value(this.element);
+                    value = value.call(this, this.element);
                 }
 
                 dragStartEvent.dataTransfer.setData(format, value);
@@ -135,9 +135,6 @@ module.exports = (function() {
         x = event.pageX;
         y = event.pageY;
 
-
-
-    
         this.offsetX = x - (rect.left + scrollLeft);
         this.offsetY = y - (rect.top + scrollTop);
 
