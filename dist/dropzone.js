@@ -171,6 +171,11 @@ module.exports = (function() {
             dragImage.addEventListener("dragstart", function(ev) {
                this.dragStartListeners.forEach(function(l) { l(ev); });
             }.bind(this));
+
+            dragImage.addEventListener("dragend", function(ev) {
+                this.dragEndListeners.forEach(function(l) { l(ev); });
+            }.bind(this));
+
             dragImage.addEventListener("dragstart", applyEffectAllowed.bind(this));
             dragImage.dragDrop();
         }
@@ -193,6 +198,7 @@ module.exports = (function() {
         }
 
         this.dragStartListeners = [];
+        this.dragEndListeners = [];
     };
 
     DragSource.prototype = {
@@ -227,7 +233,10 @@ module.exports = (function() {
             this.element.addEventListener(eventName, fn.bind(this));
             if (eventName === "dragstart" && !setDragImage) {
                 this.dragStartListeners.push(fn.bind(this));
+            } else if (eventName === "dragend" && !setDragImage) {
+                 this.dragEndListeners.push(fn.bind(this));
             }
+
             return this;
         },
 
