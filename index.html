@@ -69,8 +69,18 @@
       }
 
       .sample li.selected {
-        background-color: yellow;
+        background-color: #FFF555;
         border: 1px solid green;
+      }
+
+      .sample.ghost li.selected {
+        border-radius: 50px;
+        text-align: center;
+        font-weight: bold;
+        background-color: black;
+        color: white;
+        border-color: white;
+        margin-bottom: 2px;
       }
 
       .sample ol {
@@ -324,6 +334,7 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
                  g.appendChild(ul);
                  ul.style.padding = "0px";
                  g.classList.add("sample");
+                 g.classList.add("ghost");
 
                  [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
                    ul.appendChild(item.cloneNode(true));
@@ -331,7 +342,7 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
 
                 return g;
             })
-            .on("dragend", function() {
+            .on("dragend", function(event) {
                 var dropEffect = event.dataTransfer.getDropEffect();
                 if (dropEffect === "move") {
                    [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
@@ -381,7 +392,46 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
        document.querySelector(".sample2 [dropzone]").addEventListener("drop", dropHandler2);
        dropzone(document.querySelector(".sample2 [dropzone]"));
        </script>
+       <p>
+        To make this work we need to modify the setData function so that it encodes the values for all of the currently selected list items.  We also need to provide a custom ghost element, this example clones all of the list items with the class "selected" and adds the to a list.  Finally, the dragend function needs to remove all selected items rather than just the event target.
+       </p>
+       <pre><code class="javascript">draggable(li)
+  .effectAllowed("copyMove")
+  .setData("text/x-example", function() { 
+       var fruits = [];
+       // make sure the current element is selected
+       this.element.classList.add("selected");
+       // add each selected elements value to the array...
+       [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+          fruits.push(item.dataset.value);
+       });
+       // stringify the array
+       return fruits.join(",");
+  })
+  .ghost(function() {
+      // custom ghost element function.
+      var g = document.createElement("div"),
+         ul = document.createElement("ul");
 
+         g.appendChild(ul);
+         g.classList.add("sample");
+         g.classList.add("ghost");
+         // clone all the selected elements and add them to our custom ghost element
+         [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+           ul.appendChild(item.cloneNode(true));
+         });
+
+        return g;
+  })
+  .on("dragend", function(event) {
+        var dropEffect = event.dataTransfer.getDropEffect();
+        if (dropEffect === "move") {
+           // remove all of the selected elements if the drop was a move
+           [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+             item.parentElement.removeChild(item);
+           });
+        }
+  });</code></pre>
       </section>
 
   </div>
