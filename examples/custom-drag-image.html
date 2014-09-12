@@ -13,6 +13,15 @@
 			  background-color: #fdfd86;
 			  display:inline-block;   
 			  vertical-align: top;
+			  position: relative;
+			}
+
+			.paper::before {
+				content:url('images/pin.gif') 
+  				position:absolute; 
+  				z-index:100000;
+  				left:2px;
+  				top:2px;
 			}
 
 			.paper:nth-child(even) {

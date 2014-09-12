@@ -74,13 +74,13 @@
       }
 
       .sample.ghost li.selected {
-        border-radius: 50px;
         text-align: center;
         font-weight: bold;
         background-color: black;
         color: white;
         border-color: white;
-        margin-bottom: 2px;
+        margin-bottom: 0px;
+        position: relative;
       }
 
       .sample ol {
@@ -106,6 +106,36 @@
         border-radius: 5px;
         line-height: 1.5;
       }
+
+      .paper {
+        text-align:center;     
+        width: 105px;    
+        height: 105px;
+        margin: 25px;    
+        padding:10px;
+        border:1px solid #E8E8E8;  
+        background-color: #fdfd86;
+        display:inline-block;   
+        vertical-align: top;
+        position: relative;
+      }
+
+      .paper:before {
+        content:url('images/pin.gif');
+        position:absolute; 
+        z-index:100000;
+        right:-12px;
+        top:-12px;
+      }
+
+      .paper.clone {
+        background-color: aliceBlue;
+      }
+
+      .paper.clone:before {
+        content: "";
+      }
+
 
     </style>
   </head>
@@ -298,10 +328,48 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
     <h2>Customising the drag ghost</h2>
     <section class="sample sample2">
     <p>
-    Let's extend the example above so that users can select more than one fruit at a time.  
-
-    <b> Click on a fruit to select it. </b>
+    The spec. provides a way to customise the drag image by using the setDragImage function on DataTransfer.  Sadly this function does not exist at all on Internet Explorer and it can be quite clumsy to use elsewhere.  Quite often we don't just want a simple clone of the node that is being dragged.  The <code>draggable</code> object provides a way to provide a custom ghost image with the <code>ghost()</code> function.  Here's a simple example, pick up the paper on the right to see a custom drag image.
     </p>
+
+    <div id="paper" class="paper" draggable="true">I'm a bit of paper, pick me up and drag me !</div>
+    <div id="paperCustom" class="paper" draggable="true">No drag me !!!</div>
+    <script>
+
+      draggable("#paper")
+        .setData("text/x-paper", "I'm a bit of paper")  
+
+      draggable("#paperCustom")
+        .setData("text/x-paper", "I'm a bit of paper too")
+         .ghost(customDragImage);
+
+      function customDragImage() {
+        var clone = this.element.cloneNode(true);
+        clone.classList.add("clone");
+        clone.innerHTML = "Thanks !";
+        return clone;   
+      }
+
+    </script>
+    <p>The code to produce this is straighforward :
+    </p>
+    <pre><code class="javascript">draggable("#paper")
+  .setData("text/x-paper", "I'm a bit of paper")
+  .ghost(customDragImage);
+
+function customDragImage() {
+    // clone the node being dragged (this.element)
+    var clone = this.element.cloneNode(true);
+    // give it a class - note that this should assume the clone is a child of the body
+    clone.classList.add("clone");
+    clone.innerHTML = "Thanks !";
+    // return the node we want as the custom drag image
+    return clone;   
+}</code></pre>
+    <p>
+    As another more useful example, et's extend the fruits example from above so that users can select more than one fruit at a time.  When a user drags any fruit, all selected fruits should be moved or copied.  Without the ability to customise the drag image, it's very difficult to show the user what's getting dragged here.
+    
+    </p>
+    <p><b> Click on a fruit to select it. </b></p>
       <ul>
        <li draggable="true" data-value="fruit-apple">Apples</li>
        <li draggable="true" data-value="fruit-orange">Oranges</li>
@@ -336,7 +404,9 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
                  g.classList.add("sample");
                  g.classList.add("ghost");
 
+                  this.element.classList.add("selected");
                  [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+                  console.debug("Item is ", item);
                    ul.appendChild(item.cloneNode(true));
                  });
 
