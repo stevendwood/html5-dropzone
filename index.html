@@ -328,7 +328,7 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
     <h1>Customising the drag ghost</h1>
     <section class="sample sample2">
     <p>
-    The spec. provides a way to customise the drag image by using the setDragImage function on DataTransfer.  Sadly this function does not exist at all on Internet Explorer and it can be quite clumsy to use elsewhere.  Quite often we don't just want a simple clone of the node that is being dragged.  The <code>draggable</code> object provides a way to provide a custom ghost image with the <code>ghost()</code> function.  Here's a simple example, pick up the paper on the right to see a custom drag image.
+    The spec. provides a way to customise the drag image by using the setDragImage function on DataTransfer.  Sadly this function does not exist at all on Internet Explorer and it can be quite clumsy to use elsewhere.  Quite often we don't just want a simple clone of the node that is being dragged.  The <code>draggable</code> object provides a way to provide a cross browser way (read also works on Internet Explorer) to customise the ghost image with the <code>ghost()</code> function.  Here's a simple example, pick up the paper on the right to see a custom drag image.
     </p>
 
     <div id="paper" class="paper" draggable="true">I'm a bit of paper, pick me up and drag me !</div>
