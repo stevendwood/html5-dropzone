@@ -468,15 +468,9 @@ function customDragImage() {
        <pre><code class="javascript">draggable(li)
   .effectAllowed("copyMove")
   .setData("text/x-example", function() { 
-       var fruits = [];
-       // make sure the current element is selected
-       this.element.classList.add("selected");
-       // add each selected elements value to the array...
-       [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
-          fruits.push(item.dataset.value);
-       });
-       // stringify the array
-       return fruits.join(",");
+      return [].map.call(document.querySelectorAll("li.selected"), function(e) { 
+        return e.innerHTML; 
+      });
   })
   .ghost(function() {
       // custom ghost element function.
@@ -487,7 +481,7 @@ function customDragImage() {
          g.classList.add("sample");
          g.classList.add("ghost");
          // clone all the selected elements and add them to our custom ghost element
-         [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+         [].forEach.call(document.querySelectorAll(".li.selected"), function(item) {
            ul.appendChild(item.cloneNode(true));
          });
 
@@ -497,7 +491,7 @@ function customDragImage() {
         var dropEffect = event.dataTransfer.getDropEffect();
         if (dropEffect === "move") {
            // remove all of the selected elements if the drop was a move
-           [].forEach.call(document.querySelectorAll(".sample2 li.selected"), function(item) {
+           [].forEach.call(document.querySelectorAll("li.selected"), function(item) {
              item.parentElement.removeChild(item);
            });
         }
