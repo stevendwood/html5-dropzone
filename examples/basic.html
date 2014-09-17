@@ -47,8 +47,9 @@
 					 x = ev.clientX,
         			 y = ev.clientY;
 
-        			offsetX = x - rect.left;
-        			offsetY = y - rect.top;
+        			offsetX = x - (rect.left);
+        			offsetY = y - (rect.top);
+
 console.debug("Drag started ", offsetX, " from the left and ", offsetY, " from the top");
 					setTimeout(function() {
 						this.element.style.opacity = 0;
@@ -58,8 +59,8 @@ console.debug("Drag started ", offsetX, " from the left and ", offsetY, " from t
 					this.element.style.opacity = 1;
 					this.element.style.position = "absolute";
 					
-					this.element.style.left = (ev.clientX - offsetX ) + "px";
-					this.element.style.top = (ev.clientY  +8 - offsetY) + "px";
+					this.element.style.left = ((ev.clientX || ev.screenX) - offsetX ) + "px";
+					this.element.style.top =  ((ev.clientY || ev.screenY) - (offsetY - 8) ) + "px";
 				});
 				
 
