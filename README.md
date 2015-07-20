@@ -233,7 +233,7 @@ In the above example the drop target cannot accept the drop as it does not speci
 
 *Does the cursor update to give the user feedback on what will happen if they drop ?*
 
-Chrome & Safari will change the mouse cursor to fit the dropEffect. So does Mozilla on mac. Mozilla on windows and IE both look at the first effect they come across in the effectAllowed and set the cursor on any valid drop target to be that. Except IE who seem to always use "link" if that is in the effectAllowed e.g. if effectAllowed is "copyLink" and we set dropEffect to "link" on dragover - Mozilla will set the
+Chrome & Safari will change the mouse cursor to fit the dropEffect. So does Mozilla on mac. Mozilla on windows seems to look at the first effect it comes across in the effectAllowed list and sets the cursor on any valid drop target to be that. IE seems to always use "link" if that is in the effectAllowed e.g. if effectAllowed is "copyLink" and we set dropEffect to "link" on dragover - Mozilla will set the
 cursor to "copy" but IE set it to "link".  IE seems to have "link" as always winning. When you press ctrl, mozilla update the cursor in response. So it seems you cannot programatically affect the cursor in Mozilla by changing the drop effect in dragover.
 
 *Is the dropEffect reported at the source element on dragend ?*
