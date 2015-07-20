@@ -13,9 +13,9 @@ Check out the [Project page](http://stevendwood.github.io/html5-dropzone/) and s
 
 [Multi select with custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/multi-select.html) - This demo shows another custom drag image to represent multi selection.
 
-[soertable list demo](http://stevendwood.github.io/html5-dropzone/examples/sortable-list.html) - This demo shows another custom drag image to represent multi selection.
+[soertable list demo](http://stevendwood.github.io/html5-dropzone/examples/sortable-list.html) - This demo shows a simple sortable list.
 
-http://stevendwood.github.io/html5-dropzone/examples/multi-select.html
+
 
 
 ##Features
