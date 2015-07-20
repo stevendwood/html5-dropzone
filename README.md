@@ -5,32 +5,18 @@
 
 A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, eases implementation of HTML5 drag and drop apps  and gets drag and drop to work in the intended HTML 5 style cross browser.  
 
-[Project page](http://stevendwood.github.io/html5-dropzone/)
+Check out the [Project page](http://stevendwood.github.io/html5-dropzone/) and some demos :
 
 [Multiple dropzone demo](http://stevendwood.github.io/html5-dropzone/examples/cards.html) - This demo is based on a JQuery drag and drop example and shows how you can have different dropzones that can be fussy about what they accept even on IE.  
 
 [Custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/custom-drag-image.html) - This demo shows a custom drag image or ghost, works on IE as well despite the lack of a setDragImage function.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+[Multi select with custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/multi-select.html) - This demo shows another custom drag image to represent multi selection.
 
-- [Features](#features)
-- [Usage](#usage)
-- [Why do i need a library for native drag and drop ?](#why-do-i-need-a-library-for-native-drag-and-drop-)
-- [Using ``dropzone``](#using-dropzone)
-  - [Setting up a dropzone](#setting-up-a-dropzone)
-  - [Styling the dropzone](#styling-the-dropzone)
-  - [Multiple dropzones](#multiple-dropzones)
-- [Drag sources](#drag-sources)
-  - [Using ``draggable()``](#using-draggable)
-    - [<code>setData()</code>](#codesetdatacode)
-    - [<code>effectAllowed()</code>](#codeeffectallowedcode)
-    - [Customising the drag image](#customising-the-drag-image)
-      - [<code>ghost()</code>](#codeghostcode)
-    - [<code>event.getDropEffect()</code>](#codeeventgetdropeffectcode)
+[soertable list demo](http://stevendwood.github.io/html5-dropzone/examples/sortable-list.html) - This demo shows another custom drag image to represent multi selection.
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+http://stevendwood.github.io/html5-dropzone/examples/multi-select.html
+
 
 ##Features
 
@@ -134,7 +120,7 @@ This example also uses the <code>draggable</code> function which avoids the need
 </script>
 ```
 
-For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of the following code which will not run on IE, and will not handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target... :
+For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of the following (which will not run on IE or handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target)... :
 
 ```html
 <!-- (FOR ILLUSTRATION ONLY - DOES NOT WORK !!) -->
@@ -191,9 +177,9 @@ For anyone familiar with the HTML5 drag and drop API, this code is roughly the e
 
 I've spent many months toiling with HTML5 drag and drop on different browsers, this library represents the sum of my knowledge on the subject, hopefully it will save anyone using it a lot of time and hassle.  HTML5 drag and drop does not work natively cross browser regardless of the dropzone attribute. 
 
-__Lots of events__
+__How is it supposed to work ?__
 
-It's clumsy and requires working with lots of events.  For example to allow a user to drag one element and drop it on top of another you need to :
+well, it's clumsy and requires working with lots of events.  For example to allow a user to drag one element and drop it on top of another you need to :
 
 1. Implement the dragstart event.
 2. Implement dragenter and ...
@@ -205,27 +191,28 @@ The deal is that on dragstart - you put data into the [DataTransfer](http://html
 
 dragenter and dragover at least need to be cancelled if you want an element to accept the drop, so you must implement them even if to do nothing other than cancel the drag event.
 
-__How to I decide whether to cancel the dragenter/dragover events ?__
+__So how to I decide whether to cancel the dragenter/dragover events ?__
 
 The default action of the browser in this case is not to allow a drop, so we need to cancel the dragenter/dragover events on any drop target it if we want to change that.  In order to decide whether or not you accept a drop - you need to consider a number of things :
 
-__1 Do I recognise the type of what is being dragged__ ?
+*1 Do I recognise the type of what is being dragged ?*
 
 During dragover/enter you get access to a list of strings, these being the types of things that are currently being dragged.  Some browsers provide a list of [DataTransferItems](http://html5index.org/Drag%20and%20Drop%20-%20DataTransferItem.html) but some don't.  The data transfer item doesn't help here all that much since you only get told the "kind" of thing in addition to the type - i.e. is it a file or a string.  You cannot see exactly what is being dragged due to security considerations, which is fair enough.  
 
 This is generally workable, __except that in Internet Explorer including version 11 - you cannot store any other information except "Text" and "Url"__.  You therefore have no hope of conditionally accepting a drop if you based your decision solely  on the reported types of what is being dragged.  If you try the examples from the spec. IE will throw an exception as soon as you try and store something that is not "Text" or "Url".  
 
-__2 Does the drag source allow the effect I want to apply ?__
+*2 Does the drag source allow the effect I want to apply ?*
 
 There are two properties of interest here - effectAllowed and dropEffect. The general idea seems to be that the source of a drag indicates (by setting effectAllowed) that it can be (e.g.) moved and copied, or that it can only be copied.  The drop target can specify which action it wants to take on dragover by setting the dropEffect, e.g. if it sets the dropEffect to link and the effectAllowed is "move" - then it would seem reasonable that the drop should not be allowed.  This is how all browsers except IE work.  This library fixes this behaviour on IE.
 
-__Drop Effect and Effect Allowed__
+*"Drop Effect" and "Effect Allowed"*
+
 You can set effectAllowed ondragstart, and dropEffect on dragover.  The information below is regardless
 of whether you cancel the appropriate events to indicate you accept the drop.  You must cancel the dropevent in order for the dropEffect to be passed to the dragend function.
 
 There are three things to consider :
 
-__2.1 Should the drop be accepted only if the dropEffect set to a valid value given the effectAllowed ?__
+*Should the drop be accepted only if the dropEffect set to a valid value given the effectAllowed ?*
 
 If the dropEffect is not one of the effectAllowed values, then all browsers except IE do not accept the drop. IE allows any drop regardless of the dropEffect and the effectAllowed (this library fixes this).
 
@@ -244,12 +231,12 @@ function dragOverHandler(event) {
 
 In the above example the drop target cannot accept the drop as it does not specify a valid dropEffect.  This would not normally work on IE but by using this library the above code will result in the drop not being allowed on any browser.
 
-__2.2 Does the cursor update to give the user feedback on what will happen if they drop ?__
+*Does the cursor update to give the user feedback on what will happen if they drop ?*
 
 Chrome & Safari will change the mouse cursor to fit the dropEffect. So does Mozilla on mac. Mozilla on windows and IE both look at the first effect they come across in the effectAllowed and set the cursor on any valid drop target to be that. Except IE who seem to always use "link" if that is in the effectAllowed e.g. if effectAllowed is "copyLink" and we set dropEffect to "link" on dragover - Mozilla will set the
 cursor to "copy" but IE set it to "link".  IE seems to have "link" as always winning. When you press ctrl, mozilla update the cursor in response. So it seems you cannot programatically affect the cursor in Mozilla by changing the drop effect in dragover.
 
-__2.3 Is the dropEffect reported at the source element on dragend ?__
+*Is the dropEffect reported at the source element on dragend ?*
 
 The spec shows that the source can listen for the dragend event to see what happened.  It should look at the dropEffect within this event. Chrome, Mozilla and Safari work as you would hope here, the drop effect appears in the dragend event. In IE if the effect allowed is a simple value e.g. "copy" then any successful drop results in this value  appearing as the dropEffect on dragend.  If the effectAllowed was a compound value like "copyMove" and the drop target tried to select "move" on dragover by setting the dropEffect, you're out of luck, that will come through as  dropEffect = "none" at the source on dragend.   
 
@@ -316,12 +303,12 @@ You also get a class added ondragover reflecting the dropEffect -  drag-matches.
 
 ## Using ``dropzone``
 
-The dropzone attribute makes an element able to accept drops. If an element has a dropzone attribute, this will be parsed and used to decide whether or not to cancel the drag events required to tell the browser a drop is accepted.
+The dropzone attribute makes an element able to accept drops. If an element has a dropzone attribute, this will be parsed and used to decide whether or not to cancel the drag events required to tell the browser a drop is accepted. Presumably it was intended to save developers the pain of dealing with the plethora of events and issues described above.  
 
 ```html
 <div dropzone="copy s:text/plain s:text/x-my-custom-type" ondrop="handleDrop(event)"></div>
 ```
-This example will make the element accept any drag that contains data text/plain or text/x-my-custom-type. 
+This example will make the element accept any drag that contains data text/plain or text/x-my-custom-type with a drop effect of "copy"  
 
 
 
