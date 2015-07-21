@@ -136,6 +136,8 @@
         content: "";
       }
 
+     
+
 
     </style>
   </head>
@@ -269,7 +271,98 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
 
 
     </section>
-     <script src="dist/dropzone.js"></script>
+    
+
+    <h1>Customising the drag ghost</h1>
+    <section class="sample sample2">
+    <p>
+    The spec. provides a way to customise the drag image by using the setDragImage function on DataTransfer.  Sadly this function does not exist at all on Internet Explorer and it can be quite clumsy to use elsewhere.  Quite often we don't just want a simple clone of the node that is being dragged.  The <code>draggable</code> object provides a way to provide a cross browser way (read also works on Internet Explorer) to customise the ghost image with the <code>ghost()</code> function.  Here's a simple example, pick up the paper on the right to see a custom drag image.
+    </p>
+
+    <div id="paper" class="paper" draggable="true">I'm a bit of paper, pick me up and drag me !</div>
+    <div id="paperCustom" class="paper" draggable="true">No drag me !!!</div>
+   
+    <p>The code to produce this is straighforward :
+    </p>
+    <pre><code class="javascript">draggable("#paper")
+  .setData("text/x-paper", "I'm a bit of paper")
+  .ghost(customDragImage);
+
+function customDragImage() {
+    // clone the node being dragged (this.element)
+    var clone = this.element.cloneNode(true);
+    // give it a class - note that this should assume the clone is a child of the body
+    clone.classList.add("clone");
+    clone.innerHTML = "Thanks !";
+    // return the node we want as the custom drag image
+    return clone;   
+}</code></pre>
+    <p>
+    As another more useful example, let's extend the fruits example from above so that users can select more than one fruit at a time.  When a user drags any fruit, all selected fruits should be moved or copied.  Without the ability to customise the drag image, it's very difficult to show the user what's getting dragged here.
+    
+    </p>
+    <p><b> Click on a fruit to select it. </b></p>
+      <ul>
+       <li draggable="true" data-value="fruit-apple">Apples</li>
+       <li draggable="true" data-value="fruit-orange">Oranges</li>
+       <li draggable="true" data-value="fruit-pear">Pears</li>
+      </ul>
+
+      <p>Drop your favorite fruits below, use ctrl on windows to control copy or move:</p>
+
+      <ul dropzone="move string:text/x-example">
+      </ul>
+
+      
+       <p>
+        To make this work we need to modify the setData function so that it encodes the values for all of the currently selected list items.  We also need to provide a custom ghost element, this example clones all of the list items with the class "selected" and adds the to a list.  Finally, the dragend function needs to remove all selected items rather than just the event target.
+       </p>
+       <pre><code class="javascript">draggable(li)
+  .effectAllowed("copyMove")
+  .setData("text/x-example", function() { 
+      return [].map.call(document.querySelectorAll("li.selected"), function(e) { 
+        return e.innerHTML; 
+      });
+  })
+  .ghost(function() {
+      // custom ghost element function.
+      var g = document.createElement("div"),
+         ul = document.createElement("ul");
+
+         g.appendChild(ul);
+         g.classList.add("sample");
+         g.classList.add("ghost");
+         // clone all the selected elements and add them to our custom ghost element
+         [].forEach.call(document.querySelectorAll(".li.selected"), function(item) {
+           ul.appendChild(item.cloneNode(true));
+         });
+
+        return g;
+  })
+  .on("dragend", function(event) {
+        var dropEffect = event.dataTransfer.getDropEffect();
+        if (dropEffect === "move") {
+           // remove all of the selected elements if the drop was a move
+           [].forEach.call(document.querySelectorAll("li.selected"), function(item) {
+             item.parentElement.removeChild(item);
+           });
+        }
+  });</code></pre>
+      </section>
+    <h1>Working with Files and other applications</h1>
+    <section class="sample sample3">
+    <p>
+      One of the most attractive features of HTML5 drag and drop (perhaps it's main one) is the ability to drag information from other applications or web pages into your web app, or drag from one web page to another, or drag from a web page and drop in a native application.  
+    </p>
+    
+    <h2>Working with Text</h2>
+    <div id="trashcan" dropzone="copy s:text/plain s:text/html"></div>
+    <p id="report">Drop text from another application (or this one) into the dropzone.  The dropzone will look for text/plain or text/html represntations, so you can drag HTML fragments from other websites.</p>
+    
+
+  </div>
+
+   <script src="dist/dropzone.js"></script>
     <script>
 
         var internalDNDType = 'text/x-example'; // set this to something specific to your site
@@ -325,63 +418,23 @@ document.querySelector(".sample1 [dropzone]").addEventListener("drop", dropHandl
 
     </script>
 
-    <h1>Customising the drag ghost</h1>
-    <section class="sample sample2">
-    <p>
-    The spec. provides a way to customise the drag image by using the setDragImage function on DataTransfer.  Sadly this function does not exist at all on Internet Explorer and it can be quite clumsy to use elsewhere.  Quite often we don't just want a simple clone of the node that is being dragged.  The <code>draggable</code> object provides a way to provide a cross browser way (read also works on Internet Explorer) to customise the ghost image with the <code>ghost()</code> function.  Here's a simple example, pick up the paper on the right to see a custom drag image.
-    </p>
-
-    <div id="paper" class="paper" draggable="true">I'm a bit of paper, pick me up and drag me !</div>
-    <div id="paperCustom" class="paper" draggable="true">No drag me !!!</div>
     <script>
+      function handleDrop(e) {
+        var report =this;
+        var asHTML = e.dataTransfer.getData("text/html");
+        if (asHTML) {
+          report.innerHTML = asHTML;
+        } else {
+        report.innerHTML = e.dataTransfer.getData("text/plain");
+       }
 
-      draggable("#paper")
-        .setData("text/x-paper", "I'm a bit of paper")  
-
-      draggable("#paperCustom")
-        .setData("text/x-paper", "I'm a bit of paper too")
-         .ghost(customDragImage);
-
-      function customDragImage() {
-        var clone = this.element.cloneNode(true);
-        clone.classList.add("clone");
-        clone.innerHTML = "Thanks !";
-        return clone;   
+       e.preventDefault();
       }
 
+    document.querySelector("#trashcan").addEventListener("drop", handleDrop)
     </script>
-    <p>The code to produce this is straighforward :
-    </p>
-    <pre><code class="javascript">draggable("#paper")
-  .setData("text/x-paper", "I'm a bit of paper")
-  .ghost(customDragImage);
 
-function customDragImage() {
-    // clone the node being dragged (this.element)
-    var clone = this.element.cloneNode(true);
-    // give it a class - note that this should assume the clone is a child of the body
-    clone.classList.add("clone");
-    clone.innerHTML = "Thanks !";
-    // return the node we want as the custom drag image
-    return clone;   
-}</code></pre>
-    <p>
-    As another more useful example, et's extend the fruits example from above so that users can select more than one fruit at a time.  When a user drags any fruit, all selected fruits should be moved or copied.  Without the ability to customise the drag image, it's very difficult to show the user what's getting dragged here.
-    
-    </p>
-    <p><b> Click on a fruit to select it. </b></p>
-      <ul>
-       <li draggable="true" data-value="fruit-apple">Apples</li>
-       <li draggable="true" data-value="fruit-orange">Oranges</li>
-       <li draggable="true" data-value="fruit-pear">Pears</li>
-      </ul>
-
-      <p>Drop your favorite fruits below, use ctrl on windows to control copy or move:</p>
-
-      <ul dropzone="move string:text/x-example">
-      </ul>
-
-      <script>
+    <script>
        [].forEach.call(document.querySelectorAll(".sample2 li"), function(li) {
           draggable(li)
             .effectAllowed("copyMove")
@@ -462,43 +515,22 @@ function customDragImage() {
        document.querySelector(".sample2 [dropzone]").addEventListener("drop", dropHandler2);
        dropzone(document.querySelector(".sample2 [dropzone]"));
        </script>
-       <p>
-        To make this work we need to modify the setData function so that it encodes the values for all of the currently selected list items.  We also need to provide a custom ghost element, this example clones all of the list items with the class "selected" and adds the to a list.  Finally, the dragend function needs to remove all selected items rather than just the event target.
-       </p>
-       <pre><code class="javascript">draggable(li)
-  .effectAllowed("copyMove")
-  .setData("text/x-example", function() { 
-      return [].map.call(document.querySelectorAll("li.selected"), function(e) { 
-        return e.innerHTML; 
-      });
-  })
-  .ghost(function() {
-      // custom ghost element function.
-      var g = document.createElement("div"),
-         ul = document.createElement("ul");
+        <script>
 
-         g.appendChild(ul);
-         g.classList.add("sample");
-         g.classList.add("ghost");
-         // clone all the selected elements and add them to our custom ghost element
-         [].forEach.call(document.querySelectorAll(".li.selected"), function(item) {
-           ul.appendChild(item.cloneNode(true));
-         });
+      draggable("#paper")
+        .setData("text/x-paper", "I'm a bit of paper")  
 
-        return g;
-  })
-  .on("dragend", function(event) {
-        var dropEffect = event.dataTransfer.getDropEffect();
-        if (dropEffect === "move") {
-           // remove all of the selected elements if the drop was a move
-           [].forEach.call(document.querySelectorAll("li.selected"), function(item) {
-             item.parentElement.removeChild(item);
-           });
-        }
-  });</code></pre>
-      </section>
+      draggable("#paperCustom")
+        .setData("text/x-paper", "I'm a bit of paper too")
+         .ghost(customDragImage);
 
-  </div>
-  
+      function customDragImage() {
+        var clone = this.element.cloneNode(true);
+        clone.classList.add("clone");
+        clone.innerHTML = "Thanks !";
+        return clone;   
+      }
+
+    </script>
   </body>
 </html>
