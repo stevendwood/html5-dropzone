@@ -4,10 +4,11 @@
    	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/rainbow.min.css">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
     	body {
     		font-family: Arial;
-    		width: 820px;
+    		width: 67%;
 			  margin: 5px auto;
         font-size: 15px;
     	}
@@ -23,6 +24,7 @@
       p {
         color: #555;
         line-height: 1.5;
+        text-align: justify;
       }
 
     	hgroup h1 .hljs {
@@ -42,7 +44,8 @@
     	h1 pre {
     		padding: 3px;
     		margin: 0px;
-    		float: left;
+    		position: absolute;
+        top: 20px;
     	}
 
 
@@ -136,18 +139,34 @@
         content: "";
       }
 
-     
+      @media only screen and (max-width : 960px) {
+          body {
+            width: auto;
+            padding: 0 10px;
+          } 
 
+          .forkMe {
+            display: none;
+          }
+
+          hgroup h1, hgroup h2 {
+            text-align: center;
+          }
+
+          h1 pre  {
+            position: static;
+          }
+      }
 
     </style>
   </head>
   <body>
-  <a href="https://github.com/stevendwood/html5-dropzone"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
+  <a class="forkMe" href="https://github.com/stevendwood/html5-dropzone"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/82b228a3648bf44fc1163ef44c62fcc60081495e/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_red_aa0000.png"></a>
 
   <hgroup>
   	<h1>
-  		<pre><code class="html">&lt;div dropzone=&quot;copy s:text/x-example&quot;&gt;</code></pre>
   		HTML5 [dropzone]
+      <pre><code class="html">&lt;div dropzone=&quot;copy s:text/x-example&quot;&gt;</code></pre>
   	</h1>
   	
   	<h2>Cross browser HTML5 drag and drop</h2>
