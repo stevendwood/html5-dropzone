@@ -3,7 +3,7 @@
 #html5 [dropzone]
 
 
-A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, eases implementation of HTML5 drag and drop apps  and gets drag and drop to work in the intended HTML 5 style cross browser.  
+A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, and eases implementation of HTML5 style drag and drop.
 
 Check out the [Project page](http://stevendwood.github.io/html5-dropzone/) and some demos :
 
@@ -13,82 +13,8 @@ Check out the [Project page](http://stevendwood.github.io/html5-dropzone/) and s
 
 [Multi select with custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/multi-select.html) - This demo shows another custom drag image to represent multi selection.
 
-[soertable list demo](http://stevendwood.github.io/html5-dropzone/examples/sortable-list.html) - This demo shows a simple sortable list.
+[sortable list demo](http://stevendwood.github.io/html5-dropzone/examples/sortable-list.html) - A simple sortable list.
 
-
-
-
-##Features
-
-1. Use the dropzone attribute on any element.
-
-  ```html
-  <!-- Accept drops of text/x-paper with a default operation of move -->
-  <div id="paperbin" dropzone="move string:text/x-paper"></div>
-
-  <!-- Accept drops of text/x-paper and text/x-apple with a default operation of move -->
-  <div id="trashbin" dropzone="move s:text/x-paper s:text/x-apple"></div>
-
-  <!-- Accept any image files and and elements or text from another application that produce text/plain -->
-  <div dropzone="copy f:image/* s:text/plain"></div>
-  ```
-
-2. Store any type of data you like in DataTransfer.setData on Internet Explorer too (not just "Text" and "Url")
-  ```javascript
-    onDragStart: function(event) {
-      // this now works on IE
-      event.dataTransfer.setData("text/x-example", "foo");
-    }
-    ```
-3. Reliably read the dropEffect on source elements at the dragend using getDropEffect(). e.g. if you haven't tried to do this :
-  ```javascript
-    // implemented on the draggable source
-  function dragStartHandler(event) {
-      event.dataTransfer.effectAllowed = "copyMove"
-  }
-
-  // implemented on the drop target
-  function dragOverHandler(event) {
-      event.dataTransfer.dropEffect = "move";
-  }
-
-  function dragEndHandler(event) {
-      // following a successful drop...
-      event.dataTransfer.dropEffect; // "move" on all browsers except IE which reports "none"
-      event.dataTransfer.getDropEffect(); // "move" on all browsers
-  }
-    ```
-4. Easily accept files*
-    ```html
-    <div dropzone="copy file:text/csv"></div>
-    <script>
-       document.getElementById("dz").addEventListener("drop", function(event) {
-          event.dataTransfer.files; // contains any files dropped,
-       });
-    ```
-    *(on Firefox and IE this will allow a drop of any file, on Chrome and Safari it will only cancel the dragover/enter events where the file is actually of text/csv type) However since the dropzone will cancel the dragovers if any file is of type CSV you need
-    to check the type on drop anyway incase there was more than one file in the drag.
-    
-5. <code>draggable</code> function to ease working with drag sources and provide custom ghost elements even on Internet Explorer.
-  ```javascript
-    // make the element draggable, with two content types, 
-    // it can only be copied and it has a custom ghost element function
-    draggable("#dragMe")
-          .setData("text/plain", "Some plain text")
-          .setData("text/html", "Some <b>HTML</b> text")
-          .effectAllowed("copy")
-          .ghost(function() { 
-              var p = document.createElement("p");
-              p.innerHTML = "I'm a custom ghost";
-              p.classList.add("my-custom-ghost");
-              return p;
-          });
-  ```
-
-
-Allows you to store any data you like in the data transfer object, getting round the major IE limitation which usually only allows "Text" or "Url" in the set/get Data methods.  By using the dropzone attribute, you don't need to implement dragover and dragenter event handlers in order to accept the drop.  You also get some CSS classes added and removed when a drag is over a valid drop target and a valid drop effect is selected. 
-
-Supports: IE10+, Chrome, Firefox, Safari
 
 ##Usage
 
@@ -118,8 +44,8 @@ This example also uses the <code>draggable</code> function which avoids the need
       }
       
 </script>
-```
 
+```
 For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of the following (which will not run on IE or handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target)... :
 
 ```html
@@ -364,7 +290,7 @@ Whenever the user drags something that matches over the dropzone, the class <cod
 4. <code>link</code> Added when drag matches and the dropEffect is link.
 
 ### Multiple dropzones
-Now we can setup a 2nd dragsource and dropzone.  The 2nd dragsource is an apple, and since apples cannot go into a trashcan for paper, we need a 2nd dropzone.  This example demonstrates how dropzones can selectively accept or reject based on what is being dragged. Note that the recycle bin can accept either the paper or the apple but the paper bin can only accept the paper. 
+In this example, the 2nd dragsource is an apple, and since apples cannot go into a trashcan for paper, we need a 2nd dropzone.  This example demonstrates how dropzones can selectively accept or reject data based on what is being dragged. Note that the recycle bin can accept either the paper or the apple but the paper bin can only accept the paper. 
 
 ```html
 <div id="paper" draggable="true" ondragstart="startDragPaper(event)">I'm a bit of paper, drag me to the bin</div>
@@ -388,7 +314,6 @@ Now we can setup a 2nd dragsource and dropzone.  The 2nd dragsource is an apple,
 ```
 
 ## Drag sources
-
 
 
 ### Using ``draggable()``
