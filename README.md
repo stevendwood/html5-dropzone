@@ -18,11 +18,11 @@ Check out the [Project page](http://stevendwood.github.io/html5-dropzone/) and s
 
 ##Usage
 
-This example also uses the <code>draggable</code> function which avoids the need to implement a dragstart listener.
+This example makes the the two span elements draggable, where #paper can only be dropped on the first of the two divs that contain the dropzone attribute and #apple is only droppable on the latter.  The dropzone attribute (in theory) makes it easy to specify what content can be dropped on the element.
 
 ```html
-<div id="paper" draggable="true"></div>
-<div id="apple" draggable="true"></div>
+<span id="paper" draggable="true"></span>
+<span id="apple" draggable="true"></span>
     
 <div dropzone="move s:text/x-paper" ondrop="handleDropPaper(event)"></div>
 <div dropzone="move s:text/x-apple" ondrop="handleDropApple(event)"></div>
@@ -46,7 +46,7 @@ This example also uses the <code>draggable</code> function which avoids the need
 </script>
 
 ```
-For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of the following (which will not run on IE or handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target)... :
+For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of the following code.  The problem with the following code as opposed to that above is that it will not run on IE at all, nor will it handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target since [the dragleave event will fire when you go over any child elements](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element). 
 
 ```html
 <!-- (FOR ILLUSTRATION ONLY - DOES NOT WORK !!) -->
@@ -99,13 +99,13 @@ For anyone familiar with the HTML5 drag and drop API, this code is roughly the e
 </script>
 ```
 
-## Why do i need a library for native drag and drop ?
+## So why do i need a library for native drag and drop ?
 
 I've spent many months toiling with HTML5 drag and drop on different browsers, this library represents the sum of my knowledge on the subject, hopefully it will save anyone using it a lot of time and hassle.  HTML5 drag and drop does not work natively cross browser regardless of the dropzone attribute. 
 
 __How is it supposed to work ?__
 
-well, it's clumsy and requires working with lots of events.  For example to allow a user to drag one element and drop it on top of another you need to :
+Well, it's clumsy and requires working with lots of events.  For example to allow a user to drag one element and drop it on top of another you need to :
 
 1. Implement the dragstart event.
 2. Implement dragenter and ...
@@ -119,17 +119,17 @@ dragenter and dragover at least need to be cancelled if you want an element to a
 
 __So how to I decide whether to cancel the dragenter/dragover events ?__
 
-The default action of the browser in this case is not to allow a drop, so we need to cancel the dragenter/dragover events on any drop target it if we want to change that.  In order to decide whether or not you accept a drop - you need to consider a number of things :
+The default action of the browser in this case is not to allow a drop, so we need to cancel the dragenter/dragover events on any drop target that can accept what is being dropped if we want to change that.  In order to decide whether or not you accept a drop - you typically need to consider a number of things :
 
 *1 Do I recognise the type of what is being dragged ?*
 
 During dragover/enter you get access to a list of strings, these being the types of things that are currently being dragged.  Some browsers provide a list of [DataTransferItems](http://html5index.org/Drag%20and%20Drop%20-%20DataTransferItem.html) but some don't.  The data transfer item doesn't help here all that much since you only get told the "kind" of thing in addition to the type - i.e. is it a file or a string.  You cannot see exactly what is being dragged due to security considerations, which is fair enough.  
 
-This is generally workable, __except that in Internet Explorer including version 11 - you cannot store any other information except "Text" and "Url"__.  You therefore have no hope of conditionally accepting a drop if you based your decision solely  on the reported types of what is being dragged.  If you try the examples from the spec. IE will throw an exception as soon as you try and store something that is not "Text" or "Url".  
+This is generally workable, __except that in Internet Explorer including version 11 - you cannot store any type of data other than "Text" and "Url"__.  You therefore have no hope of conditionally accepting a drop if you based your decision solely  on the reported types of what is being dragged.  If you try the examples from the spec. IE will throw an exception as soon as you try and store something that is not "Text" or "Url".  
 
 *2 Does the drag source allow the effect I want to apply ?*
 
-There are two properties of interest here - effectAllowed and dropEffect. The general idea seems to be that the source of a drag indicates (by setting effectAllowed) that it can be (e.g.) moved and copied, or that it can only be copied.  The drop target can specify which action it wants to take on dragover by setting the dropEffect, e.g. if it sets the dropEffect to link and the effectAllowed is "move" - then it would seem reasonable that the drop should not be allowed.  This is how all browsers except IE work.  This library fixes this behaviour on IE.
+There are two properties of interest here - effectAllowed and dropEffect. The general idea seems to be that the source of a drag indicates (by setting effectAllowed) that it can be (e.g.) moved and copied, or that it can only be copied.  The drop target can specify which action it wants to take on dragover by setting the dropEffect, e.g. if it sets the dropEffect to link and the effectAllowed is "move" - then it would seem reasonable that the drop should not be allowed.  This is how all browsers except IE work.  This library fixes this behaviour on IE.  Note that saying your element is being "moved" by setting the effectAllowed does not mean you are obliged to do anything different on drop or dragend than if you had said it was being copied.
 
 *"Drop Effect" and "Effect Allowed"*
 
@@ -155,7 +155,7 @@ function dragOverHandler(event) {
 }
 ```
 
-In the above example the drop target cannot accept the drop as it does not specify a valid dropEffect.  This would not normally work on IE but by using this library the above code will result in the drop not being allowed on any browser.
+In the above example the drop target cannot accept the drop as it does not specify a valid dropEffect.  This would not normally be the case on IE but by using this library the above code will result in the drop not being allowed on any browser.
 
 *Does the cursor update to give the user feedback on what will happen if they drop ?*
 
