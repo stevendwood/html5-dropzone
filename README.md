@@ -40,7 +40,7 @@ This example makes the the two span elements draggable, where #paper can only be
        }
 
       function handleDropApple(e) {
-          e.dataTransfer.getData("x-paper"); // "Data for the x-apple drag type"
+          e.dataTransfer.getData("x-apple"); // "Data for the x-apple drag type"
       }
       
 </script>
@@ -93,7 +93,7 @@ For anyone familiar with the HTML5 drag and drop API, this code is roughly the e
 
        function handleDropApple(e) {
          // will throw an error on IE
-         e.dataTransfer.getData("x-paper"); // "Data for the x-apple drag type"
+         e.dataTransfer.getData("x-apple"); // "Data for the x-apple drag type"
       }
       
 </script>
