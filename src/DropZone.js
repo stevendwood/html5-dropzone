@@ -1,10 +1,10 @@
 module.exports = (function() {
     "use strict";
 
-    var Operation = require("./Operation");
-    var Kind = require("./Kind");
-    var Type = require("./Type");
-    var isMac = window.navigator.platform.indexOf("Mac") !== -1;
+    const Operation = require("./Operation");
+    const Kind = require("./Kind");
+    const Type = require("./Type");
+    const isMac = window.navigator.platform.indexOf("Mac") !== -1;
 
     var DataTransfer = (window.DataTransfer || window.Clipboard),
         validDrop,
@@ -192,86 +192,87 @@ module.exports = (function() {
         };
     }
 
-    var DropZone = function(element, options) {
-        var accepts = acceptsDrop.bind(this),
-            enterLeaveCount = 0,
-            cancelEventAndSetDropEffect,
-            tidyUpClassesAndResetCounter;
 
-        cancelEventAndSetDropEffect = function(event) {
-            if (accepts(event)) {
-                event.preventDefault();
-                event.stopPropagation();
+
+    class DropZone {
+        constructor(element, options) {
+            var accepts = acceptsDrop.bind(this),
+                enterLeaveCount = 0,
+                cancelEventAndSetDropEffect,
+                tidyUpClassesAndResetCounter;
+
+            cancelEventAndSetDropEffect = function(event) {
+                if (accepts(event)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+            };
+
+            if (typeof element === "string") {
+                element = document.querySelector(element);
             }
-        };
-
-        if (typeof element === "string") {
-            element = document.querySelector(element);
-        }
-        
-        this.element = element;
-        this.dragEnterClass = "drag-matches";
-        if (typeof options === "object") {
-            this.dragEnterClass = (options.dragEnterClass || this.dragEnterClass);
-            this.operation = options.operation;
-            this.accepts(options.accepts);
-        } else {
-            var dropzone;
-            if (typeof options === "string") {
-                dropzone = options;
+            
+            this.element = element;
+            this.dragEnterClass = "drag-matches";
+            if (typeof options === "object") {
+                this.dragEnterClass = (options.dragEnterClass || this.dragEnterClass);
+                this.operation = options.operation;
+                this.accepts(options.accepts);
             } else {
-                dropzone = element.getAttribute("dropzone");
+                var dropzone;
+                if (typeof options === "string") {
+                    dropzone = options;
+                } else {
+                    dropzone = element.getAttribute("dropzone");
+                }
+
+
+                var parsed = parseDropzone(dropzone);
+                this.operation = parsed.operation || Operation.COPY;
+                this.accepts(parsed.accepts);
+
             }
 
+            tidyUpClassesAndResetCounter = function() {
+                enterLeaveCount = 0;
+                removeAllDragClasses(this.element, this.dragEnterClass);
+                setTimeout(function() {
+                    // give a chance for the _dropEffect to be used
+                    validDrop = false;
+                }, 100);
+            }.bind(this);
 
-            var parsed = parseDropzone(dropzone);
-            this.operation = parsed.operation || Operation.COPY;
-            this.accepts(parsed.accepts);
+
+            element.addEventListener("dragenter", function(event) {
+                enterLeaveCount++;
+                if (enterLeaveCount === 1 && accepts(event)) {
+                    element.classList.add(this.dragEnterClass);
+                }
+            }.bind(this));
+
+            element.addEventListener("dragleave", function(event) {
+                enterLeaveCount--;
+
+                if (enterLeaveCount === 0) {
+                    tidyUpClassesAndResetCounter();
+                }
+            }.bind(this));
+
+            element.addEventListener("dragenter", cancelEventAndSetDropEffect);
+            element.addEventListener("dragover", cancelEventAndSetDropEffect);
+
+            document.body.addEventListener("dragend", function() {
+                setTimeout(tidyUpClassesAndResetCounter);
+            });
+
+            element.addEventListener("drop", function() {
+                validDrop = true;
+                tidyUpClassesAndResetCounter();
+            });
 
         }
 
-        tidyUpClassesAndResetCounter = function() {
-            enterLeaveCount = 0;
-            removeAllDragClasses(this.element, this.dragEnterClass);
-            setTimeout(function() {
-                // give a chance for the _dropEffect to be used
-                validDrop = false;
-            }, 100);
-        }.bind(this);
-
-
-        element.addEventListener("dragenter", function(event) {
-            enterLeaveCount++;
-            if (enterLeaveCount === 1 && accepts(event)) {
-                element.classList.add(this.dragEnterClass);
-            }
-        }.bind(this));
-
-        element.addEventListener("dragleave", function(event) {
-            enterLeaveCount--;
-
-            if (enterLeaveCount === 0) {
-                tidyUpClassesAndResetCounter();
-            }
-        }.bind(this));
-
-        element.addEventListener("dragenter", cancelEventAndSetDropEffect);
-        element.addEventListener("dragover", cancelEventAndSetDropEffect);
-
-        document.body.addEventListener("dragend", function() {
-            setTimeout(tidyUpClassesAndResetCounter);
-        });
-
-        element.addEventListener("drop", function() {
-            validDrop = true;
-            tidyUpClassesAndResetCounter();
-        });
-
-    };
-
-    DropZone.prototype = {
-
-        accepts: function(acceptsList) {
+        accepts(acceptsList) {
             this.acceptsList = Array.isArray(acceptsList) ? acceptsList : [acceptsList];
             this.acceptsList.forEach(function(entry, idx) {
                 if ((entry.kind === Kind.STRING) && (entry.type === Type.TEXT_PLAIN)) {

@@ -100,34 +100,38 @@ module.exports = (function() {
         }
     }
 
-    var DragSource = function(element) {
-        if (typeof element === "string") {
-            element = document.querySelector(element);
+
+
+    class DragSource {
+
+        constructor(element) {
+            if (typeof element === "string") {
+                element = document.querySelector(element);
+            }
+
+            // cheap fallible test to see if we found an element
+            if (element && element.addEventListener) {
+                this.element = element;
+                this.items = {};
+                element.setAttribute("draggable", true);
+                element.addEventListener("dragstart", encodeItems.bind(this));
+                element.addEventListener("dragstart", applyEffectAllowed.bind(this));
+            } else {
+                throw "Invalid element or selector specified as dragsource " + element;
+            }
+
+            this.dragStartListeners = [];
+            this.dragEndListeners = [];
+
         }
 
-        // cheap fallible test to see if we found an element
-        if (element && element.addEventListener) {
-            this.element = element;
-            this.items = {};
-            element.setAttribute("draggable", true);
-            element.addEventListener("dragstart", encodeItems.bind(this));
-            element.addEventListener("dragstart", applyEffectAllowed.bind(this));
-        } else {
-            throw "Invalid element or selector specified as dragsource " + element;
-        }
-
-        this.dragStartListeners = [];
-        this.dragEndListeners = [];
-    };
-
-    DragSource.prototype = {
-
-        setData: function(format, data) {
+        setData(format, data) {
             this.items[format] = data;
             return this;
-        },
+        }
 
-        ghost: function(element, offsetX, offsetY) {
+        ghost(element, offsetX, offsetY) {
+            // Ghost function
             this.ghostElementOrFunction = element;
             this.offsetX = offsetX || 0;
             this.offsetY = offsetY || 0;
@@ -146,9 +150,9 @@ module.exports = (function() {
             }
 
             return this;
-        },
+        }
 
-        on: function(eventName, fn) {
+        on(eventName, fn) {
             this.element.addEventListener(eventName, fn.bind(this));
             if (eventName === "dragstart" && !setDragImage) {
                 this.dragStartListeners.push(fn.bind(this));
@@ -157,13 +161,13 @@ module.exports = (function() {
             }
 
             return this;
-        },
+        }
 
-        effectAllowed: function(effectAllowed) {
+        effectAllowed(effectAllowed) {
             this.effectAllowed = effectAllowed;
             return this;
         }
-    };
+    }
 
     return DragSource;
 }());

@@ -7,13 +7,11 @@
     var DragSource = require("./DragSource");
     var DropZone = require("./DropZone");
 
-    window.draggable = function(element) {
-        return new DragSource(element);
-    };
+    window.draggable = (element) => new DragSource(element);
 
-    window.dropzone = function(element, options) {
-        return new DropZone(element, options);
-    };
+    window.dropzone = (element, options) => new DropZone(element, options);
+
+    class Dick {}
 
     [].forEach.call(document.querySelectorAll("[dropzone]"), dropzone); 
 

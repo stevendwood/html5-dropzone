@@ -2,13 +2,13 @@
 
     "use strict";
 
-    var Type = require("./Type");
-    var Kind = require("./Kind");
+    const Type = require("./Type");
+    const Kind = require("./Kind");
 
     var DataTransfer = (window.DataTransfer || window.Clipboard),
-       setData,
-       getData,
-       currentDragData = {};
+        setData,
+        getData,
+        currentDragData = {};
 
     if (DataTransfer) {
        setData = DataTransfer.prototype.setData;
@@ -70,7 +70,7 @@
           }
        };
 
-       document.body.addEventListener("dragend", function() {
+       document.body.addEventListener("dragend", () => {
           delete DataTransfer.prototype.items;
           currentDragData = {};
        });
