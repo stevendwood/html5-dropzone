@@ -67,9 +67,7 @@ module.exports = (function() {
 
         document.body.appendChild(dragImage);
 
-        requestAnimationFrame(function() {
-            document.body.removeChild(dragImage);
-        });
+        requestAnimationFrame(() => document.body.removeChild(dragImage));
 
         if (event.dataTransfer && typeof event.dataTransfer.setDragImage === "function") {
             event.dataTransfer.setDragImage(dragImage, this.offsetX, this.offsetY);
@@ -88,11 +86,11 @@ module.exports = (function() {
             // 
             dragImage.addEventListener("dragstart", encodeItems.bind(this));
             dragImage.addEventListener("dragstart", function(ev) {
-               this.dragStartListeners.forEach(function(l) { l(ev); });
+               this.dragStartListeners.forEach((l) => l(ev));
             }.bind(this));
 
             dragImage.addEventListener("dragend", function(ev) {
-                this.dragEndListeners.forEach(function(l) { l(ev); });
+                this.dragEndListeners.forEach((l) => l(ev));
             }.bind(this));
 
             dragImage.addEventListener("dragstart", applyEffectAllowed.bind(this));
@@ -130,11 +128,11 @@ module.exports = (function() {
             return this;
         }
 
-        ghost(element, offsetX, offsetY) {
+        ghost(element, offsetX = 0, offsetY = 0) {
             // Ghost function
             this.ghostElementOrFunction = element;
-            this.offsetX = offsetX || 0;
-            this.offsetY = offsetY || 0;
+            this.offsetX = offsetX;
+            this.offsetY = offsetY;
 
             var applyGhost = ghost.bind(this);
 

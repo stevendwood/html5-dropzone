@@ -168,7 +168,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                 document.body.appendChild(dragImage);
 
                 requestAnimationFrame(function () {
-                    document.body.removeChild(dragImage);
+                    return document.body.removeChild(dragImage);
                 });
 
                 if (event.dataTransfer && typeof event.dataTransfer.setDragImage === "function") {
@@ -189,13 +189,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     dragImage.addEventListener("dragstart", encodeItems.bind(this));
                     dragImage.addEventListener("dragstart", function (ev) {
                         this.dragStartListeners.forEach(function (l) {
-                            l(ev);
+                            return l(ev);
                         });
                     }.bind(this));
 
                     dragImage.addEventListener("dragend", function (ev) {
                         this.dragEndListeners.forEach(function (l) {
-                            l(ev);
+                            return l(ev);
                         });
                     }.bind(this));
 
@@ -235,11 +235,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
                 }, {
                     key: "ghost",
-                    value: function ghost(element, offsetX, offsetY) {
+                    value: function ghost(element) {
+                        var offsetX = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+                        var offsetY = arguments.length <= 2 || arguments[2] === undefined ? 0 : arguments[2];
+
                         // Ghost function
                         this.ghostElementOrFunction = element;
-                        this.offsetX = offsetX || 0;
-                        this.offsetY = offsetY || 0;
+                        this.offsetX = offsetX;
+                        this.offsetY = offsetY;
 
                         var applyGhost = _ghost.bind(this);
 
