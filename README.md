@@ -46,7 +46,7 @@ This example makes the the two span elements draggable, where #paper can only be
 </script>
 
 ```
-For anyone familiar with the HTML5 drag and drop API, this code is roughly the equivalent of the following code.  The problem with the following code as opposed to that above is that it will not run on IE at all, nor will it handle adding and removing the classes to the drop target elegantly when there are other elements inside the drop target since [the dragleave event will fire when you go over any child elements](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element). 
+For anyone familiar with the HTML5 drag and drop API, the above code is roughly equivalent to the following code, which doesn't use the [dropzone] attribute.  The problem with the code below is that it will not run on IE at all, nor will it handle adding and removing classes to the drop target elegantly when there are other elements inside the drop target since [the dragleave event will fire when you go over any child elements](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element). 
 
 ```html
 <!-- (FOR ILLUSTRATION ONLY - DOES NOT WORK !!) -->
@@ -119,17 +119,27 @@ dragenter and dragover at least need to be cancelled if you want an element to a
 
 __So how to I decide whether to cancel the dragenter/dragover events ?__
 
-The default action of the browser in this case is not to allow a drop, so we need to cancel the dragenter/dragover events on any drop target that can accept what is being dropped if we want to change that.  In order to decide whether or not you accept a drop - you typically need to consider a number of things :
+The default action of the browser in this case is not to allow a drop, so we need to cancel the dragenter/dragover events on any drop target that can accept a drop of what is being dragged if we want to change that.  In order to decide whether or not you accept a drop - you typically need to consider a number of things :
 
 *1 Do I recognise the type of what is being dragged ?*
 
-During dragover/enter you get access to a list of strings, these being the types of things that are currently being dragged.  Some browsers provide a list of [DataTransferItems](http://html5index.org/Drag%20and%20Drop%20-%20DataTransferItem.html) but some don't.  The data transfer item doesn't help here all that much since you only get told the "kind" of thing in addition to the type - i.e. is it a file or a string.  You cannot see exactly what is being dragged due to security considerations, which is fair enough.  
+During dragover/enter you get access to a list of strings, these being the types of things that are currently being dragged.  Some browsers provide a list of [DataTransferItems](http://html5index.org/Drag%20and%20Drop%20-%20DataTransferItem.html) but some don't.  
+
+This example creates a dropzone that allows files of type image/png to be dropped on it.
+
+```html
+<div id="pngs" dropzone="copy f:image/png">
+      Drop a png file on me.
+</div>
+```
+
+The data transfer item helps here in that get told the "kind" of thing in and the correct type of - i.e. is it a file or a string and what type of file is it.  Without the DataTransferItem interface, you only get a type of "files". So you cannot tell on dragover what the actual type of the file is.  You don't get to see exactly what is being dragged due to security considerations, which is fair enough.  
 
 This is generally workable, __except that in Internet Explorer including version 11 - you cannot store any type of data other than "Text" and "Url"__.  You therefore have no hope of conditionally accepting a drop if you based your decision solely  on the reported types of what is being dragged.  If you try the examples from the spec. IE will throw an exception as soon as you try and store something that is not "Text" or "Url".  
 
 *2 Does the drag source allow the effect I want to apply ?*
 
-There are two properties of interest here - effectAllowed and dropEffect. The general idea seems to be that the source of a drag indicates (by setting effectAllowed) that it can be (e.g.) moved and copied, or that it can only be copied.  The drop target can specify which action it wants to take on dragover by setting the dropEffect, e.g. if it sets the dropEffect to link and the effectAllowed is "move" - then it would seem reasonable that the drop should not be allowed.  This is how all browsers except IE work.  This library fixes this behaviour on IE.  Note that saying your element is being "moved" by setting the effectAllowed does not mean you are obliged to do anything different on drop or dragend than if you had said it was being copied.
+There are two properties of interest here - effectAllowed and dropEffect. The general idea seems to be that the source of a drag indicates (by setting effectAllowed) that it can be (e.g.) moved and copied, or that it can only be copied.  The drop target can specify which action it wants to take on dragover by setting the dropEffect, e.g. if it sets the dropEffect to link and the effectAllowed is "move" - then it would seem reasonable that the drop should not be allowed.  This is how all browsers except IE work.  This library fixes this behaviour on IE.  Note that saying your element is being "moved" by setting the effectAllowed, and setting the dropEffect on drag over to "move" does not mean you are obliged to do anything different on drop or dragend than if you had said it was being copied.
 
 *"Drop Effect" and "Effect Allowed"*
 
@@ -138,7 +148,7 @@ of whether you cancel the appropriate events to indicate you accept the drop.  Y
 
 There are three things to consider :
 
-*Should the drop be accepted only if the dropEffect set to a valid value given the effectAllowed ?*
+*Should the drop be accepted only if the dropEffect is set to a valid value given the effectAllowed ?*
 
 If the dropEffect is not one of the effectAllowed values, then all browsers except IE do not accept the drop. IE allows any drop regardless of the dropEffect and the effectAllowed (this library fixes this).
 
@@ -234,7 +244,7 @@ The dropzone attribute makes an element able to accept drops. If an element has 
 ```html
 <div dropzone="copy s:text/plain s:text/x-my-custom-type" ondrop="handleDrop(event)"></div>
 ```
-This example will make the element accept any drag that contains data text/plain or text/x-my-custom-type with a drop effect of "copy"  
+This example will make the element accept any drag that contains string data (that's what the "s" means before the MIME type) text/plain or text/x-my-custom-type with a drop effect of "copy"  
 
 
 
@@ -259,7 +269,7 @@ This simple example allows the user to drag the element with id "paper" and drop
 ```
 Using the dropzone attribute on an element passed to the dropzone function will automatically cancel any dragover events where the data being dragged matches the dropzone specification.  The above example will work on Internet Explorer as well despite the custom type used in the setData call.
 
-If you don't like the dropzone attribute or prefer to use unobtrusive JavaScript :
+If you don't like the dropzone attribute or prefer to use unobtrusive JavaScript, you can use the dropzone function :
 
 ```javascript
 dropzone(document.querySelector("#trashcan"), "move s:text/x-paper");
@@ -282,7 +292,7 @@ function handleDrop(e) {
 ```
 
 ### Styling the dropzone
-Whenever the user drags something that matches over the dropzone, the class <code>drag-matches</code> is added to the target.  One (of many) annoying issue(s) when using drag and drop is that if the drop target contains other child elements, [the dragleave event will fire when you go over the child](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element), however the <code>drag-matches</code> class is only added or removed when you enter or leave the drop target, much the same as mousenter/works.   The following CSS classes are added to dropzones :
+Whenever the user drags something that can be dropped on the dropzone, the class <code>drag-matches</code> is added to the target.  One (of many) annoying issue(s) when using drag and drop is that if the drop target contains other child elements, [the dragleave event will fire when you go over the child](http://stackoverflow.com/questions/7110353/html5-dragleave-fired-when-hovering-a-child-element), however the <code>drag-matches</code> class is only added or removed when you enter or leave the drop target, much the same as mousenter/works.   The following CSS classes are added to dropzones :
 
 1. <code>drag-matches</code> Added when the dropzone can accept a drop.
 2. <code>copy</code> Added when drag matches and the dropEffect is copy.
@@ -290,7 +300,7 @@ Whenever the user drags something that matches over the dropzone, the class <cod
 4. <code>link</code> Added when drag matches and the dropEffect is link.
 
 ### Multiple dropzones
-In this example, the 2nd dragsource is an apple, and since apples cannot go into a trashcan for paper, we need a 2nd dropzone.  This example demonstrates how dropzones can selectively accept or reject data based on what is being dragged. Note that the recycle bin can accept either the paper or the apple but the paper bin can only accept the paper. 
+In this [example](http://stevendwood.github.io/html5-dropzone/examples/apples.html), the 2nd dragsource is an apple, and since apples cannot go into a trashcan for paper, we need a 2nd dropzone.  This example demonstrates how dropzones can selectively accept or reject data based on what is being dragged. Note that the recycle bin can accept either the paper or the apple but the paper bin can only accept the paper. 
 
 ```html
 <div id="paper" draggable="true" ondragstart="startDragPaper(event)">I'm a bit of paper, drag me to the bin</div>
@@ -342,7 +352,7 @@ document.getElementById("draggable")
       e.dataTransfer.effectAllowed = "copyMove";
   });
 ```
-The above sample will not work cross browser without this library but it will once you use it so you don't have to use draggable for the above if you don't want to.  One other thing is that the value you provide for a type can be a string value or a function that produces a string.  if it's a function, it gets called when the drag starts.
+The above sample will not work cross browser without this library due to the first argument to setData.  One other thing is that the value you provide for a type can be a string value or a function that produces a string.  if it's a function, it gets called when the drag starts.
 
 #### <code>setData()</code>
 Equivalent to the DataTransfer.setData function, but saves you having to implement dragstart.  The 2nd param can be a string or a function that produces a string, gets called on drag start.
@@ -352,13 +362,13 @@ Equivalent to setting the DataTransfer.effectAllowed property, but saves you hav
 
 #### Customising the drag image
 
-One of the major holes of the IE implementation is the inability to provide a custom drag image.  The spec actually allows you to use a DOM element as the custom drag image, the trick being that it has to be visible.  To provide a custom drag image use the "ghost" function.  e.g consider a multi-select list.  If the user selects more than one thing, then we need to be able to indicate in the drag that more than one thing is being dragged.  In this example we provide a custom ghost image that addes into a UL a clone of all the list items having the "selected" class.
+One of the major holes of the IE implementation is the inability to provide a custom drag image.  The spec allows you to use a DOM element as the custom drag image, the trick being that it has to be visible.  e.g consider a multi-select list.  If the user selects more than one thing, then we need to be able to indicate in the drag that more than one thing is being dragged.  In this example we provide a custom ghost image that adds into a UL a clone of all the list items having the "selected" class.
 
 #####<code>ghost()</code>
 
 [Custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/custom-drag-image.html)
 
-The ghost function takes as an argument either a DOM node or a function that produces a DOM node and is called at drag start.  Typically this will be used in setDragImage for browsers that support.  Using this function allows you to supply any DOM node (doesn't have to be on the page).  e.g. :
+The ghost function takes as an argument either a DOM node or a function that produces a DOM node and is called at drag start.  Typically this will be used in setDragImage for browsers that support it.  Using this function allows you to supply any DOM node (doesn't have to be on the page).  e.g. :
 
 
 ```javascript
@@ -400,7 +410,7 @@ This produces the following :
 [Custom drag image demo](http://stevendwood.github.io/html5-dropzone/examples/multi-select.html)
 
 ####<code>event.getDropEffect()</code>
-If you want to use the browsers native dropEffect property reliably to do something to the source element based on dropEffect - then you must allow only one effectAllowed copy, move or link if you do not set it it will become "copy".  Otherwise you should use the getDropEvent function in the dragend handler which reliably works in IE for compund values of the effectAllowed property.
+If you want to use the browsers native dropEffect property reliably to do something to the source element on dragend - then you must allow only one effectAllowed copy, move or link if you do not set it it will become "copy".  Otherwise you should use the getDropEvent function in the dragend handler which reliably works in IE for compund values of the effectAllowed property.
 
 ```html
 

@@ -416,7 +416,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         }
                     }
                 }, this);
-
+                console.debug(accepts);
                 if (accepts) {
                     if (!this.element.classList.contains(effect)) {
                         this.element.classList.remove(Operation.COPY);

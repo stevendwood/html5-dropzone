@@ -112,7 +112,7 @@ module.exports = (function() {
                 // if we have an exact match on kind, or if we accept anything for kind
                 if ((item.kind === acceptsEntry.kind) || (acceptsEntry.kind === "*")) {
                     // then does the type match - or do we accept any type or is the type
-                    // "unknown" i.e. the DataTransferItem interface is no implemented...
+                    // "unknown" i.e. the DataTransferItem interface is not implemented...
                     if ((item.type === acceptsEntry.type) || (acceptsEntry.type === "*") || item.type === Type.UNKNOWN) {
                         return true;
                     } else if (acceptsEntry.type.indexOf("/*") > -1) {
