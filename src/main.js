@@ -11,8 +11,6 @@
 
     window.dropzone = (element, options) => new DropZone(element, options);
 
-    class Dick {}
-
     [].forEach.call(document.querySelectorAll("[dropzone]"), dropzone); 
 
 }());
