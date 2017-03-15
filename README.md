@@ -88,12 +88,12 @@ For anyone familiar with the HTML5 drag and drop API, the above code is roughly 
 
       function handleDropPaper(e) {
          // will throw an error on IE
-         e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
+         e.dataTransfer.getData("text/x-paper"); // "Data for the x-paper drag type"
       }
 
        function handleDropApple(e) {
          // will throw an error on IE
-         e.dataTransfer.getData("x-apple"); // "Data for the x-apple drag type"
+         e.dataTransfer.getData("text/x-apple"); // "Data for the x-apple drag type"
       }
       
 </script>
