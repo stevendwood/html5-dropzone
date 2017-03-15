@@ -1,6 +1,6 @@
 
 
-#html5 [dropzone]
+# html5 [dropzone]
 
 
 A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, and eases implementation of HTML5 style drag and drop.
@@ -16,7 +16,7 @@ Check out the [Project page](http://stevendwood.github.io/html5-dropzone/) and s
 [sortable list demo](http://stevendwood.github.io/html5-dropzone/examples/sortable-list.html) - A simple sortable list.
 
 
-##Usage
+## Usage
 
 This example makes the the two span elements draggable, where #paper can only be dropped on the first of the two divs that contain the dropzone attribute and #apple is only droppable on the latter.  The dropzone attribute (in theory) makes it easy to specify what content can be dropped on the element.
 
