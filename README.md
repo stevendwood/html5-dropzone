@@ -36,11 +36,11 @@ This example makes the the two span elements draggable, where #paper can only be
           .setData("text/x-apple", "Data for the x-apple drag type");
 
       function handleDropPaper(e) {
-          e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
+          e.dataTransfer.getData("text/x-paper"); // "Data for the x-paper drag type"
        }
 
       function handleDropApple(e) {
-          e.dataTransfer.getData("x-apple"); // "Data for the x-apple drag type"
+          e.dataTransfer.getData("text/x-apple"); // "Data for the x-apple drag type"
       }
       
 </script>
