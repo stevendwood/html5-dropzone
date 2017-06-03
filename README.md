@@ -1,6 +1,6 @@
 
 
-#html5 [dropzone]
+# html5 [dropzone]
 
 
 A small JavaScript library that provides a usable implementation of the HTML5 [dropzone](http://www.whatwg.org/specs/web-apps/current-work/multipage/interaction.html#the-dropzone-attribute) attribute, and eases implementation of HTML5 style drag and drop.
@@ -16,7 +16,7 @@ Check out the [Project page](http://stevendwood.github.io/html5-dropzone/) and s
 [sortable list demo](http://stevendwood.github.io/html5-dropzone/examples/sortable-list.html) - A simple sortable list.
 
 
-##Usage
+## Usage
 
 This example makes the the two span elements draggable, where #paper can only be dropped on the first of the two divs that contain the dropzone attribute and #apple is only droppable on the latter.  The dropzone attribute (in theory) makes it easy to specify what content can be dropped on the element.
 
@@ -36,11 +36,11 @@ This example makes the the two span elements draggable, where #paper can only be
           .setData("text/x-apple", "Data for the x-apple drag type");
 
       function handleDropPaper(e) {
-          e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
+          e.dataTransfer.getData("text/x-paper"); // "Data for the x-paper drag type"
        }
 
       function handleDropApple(e) {
-          e.dataTransfer.getData("x-apple"); // "Data for the x-apple drag type"
+          e.dataTransfer.getData("text/x-apple"); // "Data for the x-apple drag type"
       }
       
 </script>
@@ -88,12 +88,12 @@ For anyone familiar with the HTML5 drag and drop API, the above code is roughly 
 
       function handleDropPaper(e) {
          // will throw an error on IE
-         e.dataTransfer.getData("x-paper"); // "Data for the x-paper drag type"
+         e.dataTransfer.getData("text/x-paper"); // "Data for the x-paper drag type"
       }
 
        function handleDropApple(e) {
          // will throw an error on IE
-         e.dataTransfer.getData("x-apple"); // "Data for the x-apple drag type"
+         e.dataTransfer.getData("text/x-apple"); // "Data for the x-apple drag type"
       }
       
 </script>
