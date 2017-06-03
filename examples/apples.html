@@ -56,8 +56,8 @@
     <div id="paper" draggable="true" ondragstart="startDragPaper(event)">I'm a bit of paper, drag me to the bin</div>
     <div id="apple" draggable="true" ondragstart="startDragApple(event)"></div>
 
-    <div id="paperbin" dropzone="move string:text/x-paper f:text/x-apple s:text/plain" ondrop="handleDropPaper(event)"></div>
-    <div id="recyclebin" dropzone="move s:text/x-apple s:text/x-paper" ondrop="handleDropApple(event)"></div>
+    <div id="paperbin" dropzone="move string:text/x-paper" ondrop="handleDropPaper(event)"></div>
+    <div id="recyclebin" dropzone="move s:text/x-apple" ondrop="handleDropApple(event)"></div>
 
     <script src="../dist/dropzone.min.js"></script>
     <script>
